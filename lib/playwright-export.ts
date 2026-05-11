@@ -10,7 +10,8 @@ export async function exportSlides(html: string, slideCount: number): Promise<st
   fs.writeFileSync(htmlPath, html, 'utf8')
 
   const { chromium } = await import('playwright')
-  const browser = await chromium.launch()
+  const executablePath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH
+  const browser = await chromium.launch(executablePath ? { executablePath } : {})
   try {
     const page = await browser.newPage()
     await page.setViewportSize({ width: 1080, height: 1350 })

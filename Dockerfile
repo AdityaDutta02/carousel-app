@@ -1,20 +1,16 @@
 FROM node:20-bookworm-slim AS base
 WORKDIR /app
 
-# System deps for Playwright Chromium + zip
+# System Chromium + zip (avoids Playwright's ~100MB browser download)
 RUN apt-get update && apt-get install -y \
-  zip \
-  libglib2.0-0 libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 \
-  libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 \
-  libxfixes3 libxrandr2 libgbm1 libasound2 libpango-1.0-0 \
-  libcairo2 libx11-6 libx11-xcb1 libxcb1 libxext6 libexpat1 \
+  zip chromium \
   && rm -rf /var/lib/apt/lists/*
+
+ENV PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD=1
+ENV PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium
 
 COPY package*.json ./
 RUN npm install
-
-# Install Playwright Chromium browser
-RUN npx playwright install chromium
 
 COPY . .
 RUN npm run build
