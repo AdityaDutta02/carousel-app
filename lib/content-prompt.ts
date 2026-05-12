@@ -116,7 +116,10 @@ Each headline line: MAX 4 WORDS. items: 4 max.
 cta — blue slide, page name is injected automatically, you write only the tagline
 { "type": "cta", "tagline": "one sentence 8–15 words that makes the reader feel ahead of the curve" }
 
-Typical sequence: hook(dark), data(dark), insight(white), data or list(dark), insight or grid(white), list(dark), findings or grid(white), cta(blue).`;
+ALTERNATION RULE — non-negotiable: dark and white slides MUST strictly alternate. Never place two dark slides or two white slides consecutively. The CTA (blue) always ends the sequence and is exempt.
+
+Typical sequence: hook(dark), insight(white), data(dark), insight or findings(white), list(dark), grid or findings(white), data or list(dark), insight or grid(white), cta(blue).
+If you have more slides: keep alternating — dark, white, dark, white — until you reach the CTA.`;
   // (unreachable when file exists - this is the fallback)
 }
 
