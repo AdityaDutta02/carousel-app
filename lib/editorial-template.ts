@@ -50,7 +50,7 @@ body { width: 1080px; background: #1A1A1A; font-family: 'Inter', sans-serif; }
   background: rgba(245,200,0,0.12); border: 1px solid rgba(245,200,0,0.28);
   padding: 18px 40px; margin-top: 56px;
   font-family: 'Inter', sans-serif; font-weight: 300;
-  font-size: 26px; color: rgba(255,255,255,0.68); line-height: 1.45;
+  font-size: 32px; color: rgba(255,255,255,0.68); line-height: 1.45;
   max-width: 860px;
 }
 
@@ -58,7 +58,7 @@ body { width: 1080px; background: #1A1A1A; font-family: 'Inter', sans-serif; }
 .stats { margin-top: 60px; }
 .sr { display: flex; flex-direction: row; align-items: baseline; gap: 28px; padding: 34px 0; border-bottom: 1px solid #2E2E2E; }
 .sr:first-child { border-top: 1px solid #2E2E2E; }
-.sr-lbl { font-family: 'Inter', sans-serif; font-weight: 300; font-size: 26px; color: rgba(255,255,255,0.42); flex: 1; line-height: 1.4; }
+.sr-lbl { font-family: 'Inter', sans-serif; font-weight: 300; font-size: 32px; color: rgba(255,255,255,0.42); flex: 1; line-height: 1.4; }
 .sr-val { font-family: 'Bebas Neue', sans-serif; font-size: 88px; line-height: 1; color: #F5C800; }
 
 /* list split layout */
@@ -78,8 +78,8 @@ body { width: 1080px; background: #1A1A1A; font-family: 'Inter', sans-serif; }
 .li { display: flex; flex-direction: row; align-items: flex-start; gap: 36px; padding: 34px 0; border-top: 1px solid #2E2E2E; }
 .li:last-child { border-bottom: 1px solid #2E2E2E; }
 .li-n { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 12px; color: rgba(255,255,255,0.20); letter-spacing: 0.12em; min-width: 28px; padding-top: 8px; }
-.li-title { font-family: 'DM Serif Display', serif; font-size: 36px; color: #FFFFFF; line-height: 1.25; margin-bottom: 10px; }
-.li-desc { font-family: 'Inter', sans-serif; font-weight: 300; font-size: 24px; color: rgba(255,255,255,0.44); line-height: 1.55; }
+.li-title { font-family: 'DM Serif Display', serif; font-size: 40px; color: #FFFFFF; line-height: 1.25; margin-bottom: 10px; }
+.li-desc { font-family: 'Inter', sans-serif; font-weight: 300; font-size: 28px; color: rgba(255,255,255,0.44); line-height: 1.55; }
 
 /* findings two-col */
 .fg { display: grid; grid-template-columns: 1fr 1fr; margin-top: 60px; }
@@ -87,8 +87,8 @@ body { width: 1080px; background: #1A1A1A; font-family: 'Inter', sans-serif; }
 .fi:nth-child(odd)  { padding-right: 56px; }
 .fi:nth-child(even) { padding-left: 56px; border-left: 1px solid #E4E4E4; }
 .fi:nth-last-child(-n+2) { border-bottom: none; }
-.fi-title { font-family: 'DM Serif Display', serif; font-size: 36px; color: #0D0D0D; line-height: 1.2; margin-bottom: 14px; }
-.fi-desc { font-family: 'Inter', sans-serif; font-weight: 300; font-size: 23px; color: #888888; line-height: 1.60; }
+.fi-title { font-family: 'DM Serif Display', serif; font-size: 40px; color: #0D0D0D; line-height: 1.2; margin-bottom: 14px; }
+.fi-desc { font-family: 'Inter', sans-serif; font-weight: 300; font-size: 28px; color: #888888; line-height: 1.60; }
 
 /* company/grid two-col */
 .cg { display: grid; grid-template-columns: 1fr 1fr; margin-top: 60px; }
@@ -96,8 +96,8 @@ body { width: 1080px; background: #1A1A1A; font-family: 'Inter', sans-serif; }
 .ci:nth-child(odd)  { padding-right: 48px; }
 .ci:nth-child(even) { padding-left: 48px; border-left: 1px solid #E4E4E4; }
 .ci:nth-last-child(-n+2) { border-bottom: none; }
-.ci-name { font-family: 'DM Serif Display', serif; font-size: 32px; color: #0D0D0D; line-height: 1.25; margin-bottom: 4px; }
-.ci-role { font-family: 'Inter', sans-serif; font-weight: 300; font-size: 21px; color: #999999; }
+.ci-name { font-family: 'DM Serif Display', serif; font-size: 38px; color: #0D0D0D; line-height: 1.25; margin-bottom: 4px; }
+.ci-role { font-family: 'Inter', sans-serif; font-weight: 300; font-size: 26px; color: #999999; }
 
 /* cta button */
 .cta-btn {
@@ -181,7 +181,7 @@ function buildData(s: Slide, handle: string, index: number, total: number): stri
     .map(st => `<div class="sr"><span class="sr-lbl">${esc(st.label)}</span><span class="sr-val">${esc(st.value)}</span></div>`)
     .join('');
   const footnote = s.footnote
-    ? `<p style="margin-top:36px;font-family:'Inter',sans-serif;font-weight:300;font-size:21px;color:rgba(255,255,255,0.30);line-height:1.55;">${esc(s.footnote)}</p>`
+    ? `<p style="margin-top:36px;font-family:'Inter',sans-serif;font-weight:300;font-size:26px;color:rgba(255,255,255,0.30);line-height:1.55;">${esc(s.footnote)}</p>`
     : '';
   return `<section class="slide dk" id="slide-${s.id}">
   <div class="top-bar"></div>
@@ -198,10 +198,10 @@ function buildData(s: Slide, handle: string, index: number, total: number): stri
 
 function buildInsight(s: Slide, index: number, total: number): string {
   const body = s.body
-    ? `<p style="font-family:'Inter',sans-serif;font-weight:300;font-size:27px;line-height:1.65;color:#555555;margin-top:56px;max-width:880px;">${esc(s.body)}</p>`
+    ? `<p style="font-family:'Inter',sans-serif;font-weight:300;font-size:33px;line-height:1.65;color:#555555;margin-top:56px;max-width:880px;">${esc(s.body)}</p>`
     : '';
   const supporting = s.supporting
-    ? `<p style="font-family:'Inter',sans-serif;font-weight:400;font-size:24px;line-height:1.55;color:#AAAAAA;margin-top:28px;max-width:880px;">${esc(s.supporting)}</p>`
+    ? `<p style="font-family:'Inter',sans-serif;font-weight:400;font-size:30px;line-height:1.55;color:#AAAAAA;margin-top:28px;max-width:880px;">${esc(s.supporting)}</p>`
     : '';
   return `<section class="slide wt" id="slide-${s.id}">
   <div class="left-gutter"></div>
@@ -289,7 +289,7 @@ function buildFindings(s: Slide, index: number, total: number): string {
 
 function buildCTA(s: Slide, handle: string, pageName: string, index: number, total: number): string {
   const tagline = s.tagline
-    ? `<p style="font-family:'Inter',sans-serif;font-weight:300;font-size:27px;line-height:1.65;color:#5A4C00;margin-top:32px;max-width:800px;">${esc(s.tagline)}</p>`
+    ? `<p style="font-family:'Inter',sans-serif;font-weight:300;font-size:33px;line-height:1.65;color:#5A4C00;margin-top:32px;max-width:800px;">${esc(s.tagline)}</p>`
     : '';
   return `<section class="slide yw" id="slide-${s.id}">
   <div style="position:absolute;top:0;left:0;right:0;padding:60px 80px 0;display:flex;justify-content:space-between;align-items:center;z-index:2;">

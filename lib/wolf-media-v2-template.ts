@@ -109,17 +109,17 @@ body { width: 1080px; background: #0D0D0D; font-family: 'Outfit', sans-serif; }
 .rd { color: #E02020; }
 
 /* BODY TEXT — uppercase */
-.bb2  { font-size: 25px; font-weight: 700; line-height: 1.45; color: rgba(255,255,255,0.90); text-transform: uppercase; letter-spacing: 0.04em; }
-.br2  { font-size: 23px; font-weight: 400; line-height: 1.60; color: rgba(255,255,255,0.44); text-transform: uppercase; letter-spacing: 0.03em; }
-.wbb2 { font-size: 25px; font-weight: 700; line-height: 1.45; color: #111111; text-transform: uppercase; letter-spacing: 0.04em; }
-.wbr2 { font-size: 23px; font-weight: 400; line-height: 1.60; color: #666666; text-transform: uppercase; letter-spacing: 0.03em; }
+.bb2  { font-size: 31px; font-weight: 700; line-height: 1.45; color: rgba(255,255,255,0.90); text-transform: uppercase; letter-spacing: 0.04em; }
+.br2  { font-size: 29px; font-weight: 400; line-height: 1.60; color: rgba(255,255,255,0.44); text-transform: uppercase; letter-spacing: 0.03em; }
+.wbb2 { font-size: 31px; font-weight: 700; line-height: 1.45; color: #111111; text-transform: uppercase; letter-spacing: 0.04em; }
+.wbr2 { font-size: 29px; font-weight: 400; line-height: 1.60; color: #666666; text-transform: uppercase; letter-spacing: 0.03em; }
 
 /* SUBTITLE PILL — hook slide */
 .sub-pill2 {
   display: inline-flex; align-items: center;
   border: 1.5px solid rgba(255,255,255,0.20);
   border-radius: 4px; padding: 14px 28px;
-  font-size: 20px; font-weight: 700;
+  font-size: 26px; font-weight: 700;
   color: rgba(255,255,255,0.68); margin-top: 44px;
   letter-spacing: 0.10em; text-transform: uppercase;
 }
@@ -135,8 +135,8 @@ body { width: 1080px; background: #0D0D0D; font-family: 'Outfit', sans-serif; }
   width: fit-content; min-width: 600px;
 }
 .stat-row2 + .stat-row2 { margin-top: 10px; }
-.stat-lbl2 { font-size: 20px; font-weight: 700; color: rgba(255,255,255,0.52); letter-spacing: 0.08em; text-transform: uppercase; flex: 1; }
-.stat-val2 { font-size: 26px; font-weight: 900; color: #E02020; letter-spacing: -0.01em; }
+.stat-lbl2 { font-size: 26px; font-weight: 700; color: rgba(255,255,255,0.52); letter-spacing: 0.08em; text-transform: uppercase; flex: 1; }
+.stat-val2 { font-size: 32px; font-weight: 900; color: #E02020; letter-spacing: -0.01em; }
 
 /* FINDINGS GRID */
 .findings-grid2 { display: grid; grid-template-columns: 1fr 1fr; }
@@ -144,8 +144,8 @@ body { width: 1080px; background: #0D0D0D; font-family: 'Outfit', sans-serif; }
 .finding2:nth-child(odd) { padding-right: 50px; }
 .finding2:nth-child(even) { padding-left: 50px; border-left: 1px solid #DDDDDD; }
 .finding2:nth-last-child(-n+2) { border-bottom: none; }
-.finding-title2 { font-size: 24px; font-weight: 900; color: #111111; line-height: 1.3; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em; }
-.finding-desc2 { font-size: 20px; font-weight: 400; color: #888888; line-height: 1.55; text-transform: uppercase; letter-spacing: 0.02em; }
+.finding-title2 { font-size: 30px; font-weight: 900; color: #111111; line-height: 1.3; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em; }
+.finding-desc2 { font-size: 26px; font-weight: 400; color: #888888; line-height: 1.55; text-transform: uppercase; letter-spacing: 0.02em; }
 
 /* COMPANY GRID */
 .co-grid2 { display: grid; grid-template-columns: 1fr 1fr; margin-top: 40px; }
@@ -153,8 +153,8 @@ body { width: 1080px; background: #0D0D0D; font-family: 'Outfit', sans-serif; }
 .co-item2:nth-child(odd) { padding-right: 44px; }
 .co-item2:nth-child(even) { padding-left: 44px; border-left: 1px solid #DDDDDD; }
 .co-item2:nth-last-child(-n+2) { border-bottom: none; }
-.co-name2 { font-size: 22px; font-weight: 900; color: #111111; text-transform: uppercase; letter-spacing: 0.04em; }
-.co-role2 { font-size: 17px; color: #999999; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.03em; }
+.co-name2 { font-size: 28px; font-weight: 900; color: #111111; text-transform: uppercase; letter-spacing: 0.04em; }
+.co-role2 { font-size: 23px; color: #999999; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.03em; }
 `;
 
 function esc(s: string): string {
@@ -260,8 +260,8 @@ function buildList(s: Slide, handle: string, index: number, total: number): stri
       return `      <div style="display:flex;align-items:flex-start;gap:28px;padding:26px 0;border-top:1px solid rgba(255,255,255,0.08);${borderBottom}">
         <span style="font-size:11px;font-weight:900;color:#E02020;letter-spacing:0.14em;min-width:28px;padding-top:6px;text-transform:uppercase;">${num}</span>
         <div>
-          <div style="font-size:22px;font-weight:900;color:rgba(255,255,255,0.90);line-height:1.3;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">${esc(step.title)}</div>
-          <div style="font-size:21px;font-weight:400;color:rgba(255,255,255,0.40);line-height:1.50;text-transform:uppercase;letter-spacing:0.03em;">${esc(step.desc)}</div>
+          <div style="font-size:28px;font-weight:900;color:rgba(255,255,255,0.90);line-height:1.3;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.05em;">${esc(step.title)}</div>
+          <div style="font-size:27px;font-weight:400;color:rgba(255,255,255,0.40);line-height:1.50;text-transform:uppercase;letter-spacing:0.03em;">${esc(step.desc)}</div>
         </div>
       </div>`;
     })
@@ -313,7 +313,7 @@ ${items}
 
 function buildCTA(s: Slide, handle: string, pageName: string, index: number, total: number): string {
   const tagline = s.tagline
-    ? `<div style="margin-top:40px;max-width:740px;font-size:26px;font-weight:400;line-height:1.55;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.04em;">${esc(s.tagline)}</div>`
+    ? `<div style="margin-top:40px;max-width:740px;font-size:32px;font-weight:400;line-height:1.55;color:rgba(255,255,255,0.65);text-transform:uppercase;letter-spacing:0.04em;">${esc(s.tagline)}</div>`
     : '';
   return `<section class="slide ct2" id="slide-${s.id}">
   <div class="red-bar"></div>

@@ -124,10 +124,10 @@ body { width: 1080px; background: #1C1C1C; font-family: 'Space Mono', monospace;
 .ora { color: ${ORANGE}; }
 
 /* BODY TEXT — Outfit for readability */
-.bbp  { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 700; line-height: 1.50; color: rgba(255,255,255,0.88); }
-.brp  { font-family: 'Outfit', sans-serif; font-size: 24px; font-weight: 400; line-height: 1.65; color: rgba(255,255,255,0.44); }
-.wbbp { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 700; line-height: 1.50; color: #1C1C1C; }
-.wbrp { font-family: 'Outfit', sans-serif; font-size: 24px; font-weight: 400; line-height: 1.65; color: #777060; }
+.bbp  { font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 700; line-height: 1.50; color: rgba(255,255,255,0.88); }
+.brp  { font-family: 'Outfit', sans-serif; font-size: 30px; font-weight: 400; line-height: 1.65; color: rgba(255,255,255,0.44); }
+.wbbp { font-family: 'Outfit', sans-serif; font-size: 32px; font-weight: 700; line-height: 1.50; color: #1C1C1C; }
+.wbrp { font-family: 'Outfit', sans-serif; font-size: 30px; font-weight: 400; line-height: 1.65; color: #777060; }
 
 /* SUBTITLE PILL — hook */
 .sub-pilp {
@@ -135,7 +135,7 @@ body { width: 1080px; background: #1C1C1C; font-family: 'Space Mono', monospace;
   border: 1px solid rgba(255,255,255,0.16);
   padding: 13px 28px; margin-top: 44px;
   font-family: 'Outfit', sans-serif;
-  font-size: 20px; font-weight: 500;
+  font-size: 26px; font-weight: 500;
   color: rgba(255,255,255,0.60); letter-spacing: 0.02em;
 }
 
@@ -149,8 +149,8 @@ body { width: 1080px; background: #1C1C1C; font-family: 'Space Mono', monospace;
   width: fit-content; min-width: 580px;
 }
 .stat-rowp + .stat-rowp { margin-top: 10px; }
-.stat-lblp { font-size: 18px; font-weight: 400; color: rgba(255,255,255,0.48); letter-spacing: 0.04em; flex: 1; font-family: 'Outfit', sans-serif; }
-.stat-valp { font-size: 22px; font-weight: 700; color: ${ORANGE}; letter-spacing: -0.01em; }
+.stat-lblp { font-size: 24px; font-weight: 400; color: rgba(255,255,255,0.48); letter-spacing: 0.04em; flex: 1; font-family: 'Outfit', sans-serif; }
+.stat-valp { font-size: 28px; font-weight: 700; color: ${ORANGE}; letter-spacing: -0.01em; }
 
 /* FINDINGS GRID */
 .findings-gridp { display: grid; grid-template-columns: 1fr 1fr; }
@@ -158,8 +158,8 @@ body { width: 1080px; background: #1C1C1C; font-family: 'Space Mono', monospace;
 .findingp:nth-child(odd) { padding-right: 50px; }
 .findingp:nth-child(even) { padding-left: 50px; border-left: 1px solid #E5DDD0; }
 .findingp:nth-last-child(-n+2) { border-bottom: none; }
-.finding-titlep { font-family: 'Space Mono', monospace; font-size: 22px; font-weight: 700; color: #1C1C1C; line-height: 1.3; margin-bottom: 8px; }
-.finding-descp { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 400; color: #777060; line-height: 1.55; }
+.finding-titlep { font-family: 'Space Mono', monospace; font-size: 28px; font-weight: 700; color: #1C1C1C; line-height: 1.3; margin-bottom: 8px; }
+.finding-descp { font-family: 'Outfit', sans-serif; font-size: 26px; font-weight: 400; color: #777060; line-height: 1.55; }
 
 /* COMPANY GRID */
 .co-gridp { display: grid; grid-template-columns: 1fr 1fr; margin-top: 40px; }
@@ -167,8 +167,8 @@ body { width: 1080px; background: #1C1C1C; font-family: 'Space Mono', monospace;
 .co-itemp:nth-child(odd) { padding-right: 44px; }
 .co-itemp:nth-child(even) { padding-left: 44px; border-left: 1px solid #E5DDD0; }
 .co-itemp:nth-last-child(-n+2) { border-bottom: none; }
-.co-namep { font-family: 'Space Mono', monospace; font-size: 21px; font-weight: 700; color: #1C1C1C; }
-.co-rolep { font-family: 'Outfit', sans-serif; font-size: 17px; color: #999088; margin-top: 3px; }
+.co-namep { font-family: 'Space Mono', monospace; font-size: 27px; font-weight: 700; color: #1C1C1C; }
+.co-rolep { font-family: 'Outfit', sans-serif; font-size: 23px; color: #999088; margin-top: 3px; }
 
 /* TERMINAL PANEL — used in list/step slides */
 .terminal-p {
@@ -322,8 +322,8 @@ function buildList(s: Slide, handle: string, index: number, total: number): stri
       return `      <div style="display:flex;align-items:flex-start;gap:28px;padding:26px 0;border-top:1px solid rgba(255,255,255,0.07);${borderBottom}">
         <span style="font-size:12px;font-weight:700;color:${ORANGE};letter-spacing:0.06em;min-width:32px;padding-top:5px;">${num}</span>
         <div>
-          <div style="font-family:'Space Mono',monospace;font-size:21px;font-weight:700;color:rgba(255,255,255,0.88);line-height:1.3;margin-bottom:7px;">${esc(step.title)}</div>
-          <div style="font-family:'Outfit',sans-serif;font-size:21px;font-weight:400;color:rgba(255,255,255,0.42);line-height:1.55;">${esc(step.desc)}</div>
+          <div style="font-family:'Space Mono',monospace;font-size:27px;font-weight:700;color:rgba(255,255,255,0.88);line-height:1.3;margin-bottom:7px;">${esc(step.title)}</div>
+          <div style="font-family:'Outfit',sans-serif;font-size:27px;font-weight:400;color:rgba(255,255,255,0.42);line-height:1.55;">${esc(step.desc)}</div>
         </div>
       </div>`;
     })
@@ -372,7 +372,7 @@ ${items}
 
 function buildCTA(s: Slide, handle: string, pageName: string, index: number, total: number): string {
   const tagline = s.tagline
-    ? `<div style="margin-top:40px;max-width:740px;font-family:'Outfit',sans-serif;font-size:26px;font-weight:400;line-height:1.55;color:rgba(255,255,255,0.60);">${esc(s.tagline)}</div>`
+    ? `<div style="margin-top:40px;max-width:740px;font-family:'Outfit',sans-serif;font-size:32px;font-weight:400;line-height:1.55;color:rgba(255,255,255,0.60);">${esc(s.tagline)}</div>`
     : '';
   return `<section class="slide ctp" id="slide-${s.id}">
   ${PIXEL_BOT}

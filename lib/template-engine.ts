@@ -162,25 +162,25 @@ body {
 
 /* Body text */
 .bb {
-  font-size: 26px;
+  font-size: 32px;
   font-weight: 700;
   line-height: 1.45;
   color: rgba(255,255,255,0.92);
 }
 .br {
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 400;
   line-height: 1.60;
   color: rgba(255,255,255,0.50);
 }
 .wbb {
-  font-size: 26px;
+  font-size: 32px;
   font-weight: 700;
   line-height: 1.45;
   color: #141414;
 }
 .wbr {
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 400;
   line-height: 1.60;
   color: #888888;
@@ -199,12 +199,12 @@ body {
 }
 .stat-row + .stat-row { margin-top: 12px; }
 .stat-lbl {
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 400;
   color: rgba(255,255,255,0.68);
 }
 .stat-val {
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 800;
   color: #FFFFFF;
 }
@@ -216,7 +216,7 @@ body {
   border: 1.5px solid rgba(255,255,255,0.26);
   border-radius: 100px;
   padding: 14px 34px;
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 500;
   color: rgba(255,255,255,0.80);
   margin-top: 46px;
@@ -236,14 +236,14 @@ body {
 .finding:nth-child(even) { padding-left: 50px; border-left: 1px solid #E4E4E4; }
 .finding:nth-last-child(-n+2) { border-bottom: none; }
 .finding-title {
-  font-size: 26px;
+  font-size: 32px;
   font-weight: 700;
   color: #111111;
   line-height: 1.3;
   margin-bottom: 8px;
 }
 .finding-desc {
-  font-size: 21px;
+  font-size: 26px;
   font-weight: 400;
   color: #888888;
   line-height: 1.55;
@@ -263,12 +263,12 @@ body {
 .co-item:nth-child(even) { padding-left: 44px; border-left: 1px solid #E4E4E4; }
 .co-item:nth-last-child(-n+2) { border-bottom: none; }
 .co-name {
-  font-size: 24px;
+  font-size: 30px;
   font-weight: 700;
   color: #111111;
 }
 .co-role {
-  font-size: 18px;
+  font-size: 24px;
   color: #999999;
   margin-top: 2px;
 }
@@ -373,8 +373,8 @@ function buildList(s: Slide, handle: string, index: number, total: number): stri
       return `      <div style="display:flex;align-items:flex-start;gap:32px;padding:30px 0;border-top:1px solid rgba(255,255,255,0.10);${borderBottom}">
         <span style="font-size:13px;font-weight:700;color:rgba(255,255,255,0.28);letter-spacing:0.08em;min-width:28px;padding-top:6px;">${num}</span>
         <div>
-          <div style="font-size:24px;font-weight:700;color:rgba(255,255,255,0.92);line-height:1.3;margin-bottom:8px;">${esc(step.title)}</div>
-          <div style="font-size:24px;font-weight:400;color:rgba(255,255,255,0.46);line-height:1.50;">${esc(step.desc)}</div>
+          <div style="font-size:30px;font-weight:700;color:rgba(255,255,255,0.92);line-height:1.3;margin-bottom:8px;">${esc(step.title)}</div>
+          <div style="font-size:28px;font-weight:400;color:rgba(255,255,255,0.46);line-height:1.50;">${esc(step.desc)}</div>
         </div>
       </div>`;
     })
@@ -422,7 +422,7 @@ ${items}
 }
 
 function buildCTA(s: Slide, handle: string, pageName: string, index: number, total: number): string {
-  const tagline = s.tagline ? `<div style="margin-top:40px;max-width:740px;font-size:28px;font-weight:400;line-height:1.50;color:rgba(255,255,255,0.78);">${esc(s.tagline)}</div>` : '';
+  const tagline = s.tagline ? `<div style="margin-top:40px;max-width:740px;font-size:34px;font-weight:400;line-height:1.50;color:rgba(255,255,255,0.78);">${esc(s.tagline)}</div>` : '';
   return `<section class="slide ct" id="slide-${s.id}">
   <div class="handle-tl">${esc(handle)}</div>
   <div style="position:absolute;inset:0;padding:90px;padding-top:430px;z-index:2;">

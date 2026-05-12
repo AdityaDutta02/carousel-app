@@ -94,17 +94,17 @@ body { width: 1080px; background: #0E0E0E; font-family: 'Outfit', sans-serif; }
 .em-acc-lk { font-style: italic; color: #A8936A; }
 
 /* BODY TEXT */
-.bbe  { font-size: 26px; font-weight: 600; line-height: 1.50; color: rgba(255,255,255,0.88); }
-.bre  { font-size: 24px; font-weight: 400; line-height: 1.65; color: rgba(255,255,255,0.45); }
-.wbbe { font-size: 26px; font-weight: 600; line-height: 1.50; color: #1A1A1A; }
-.wbre { font-size: 24px; font-weight: 400; line-height: 1.65; color: #777777; }
+.bbe  { font-size: 32px; font-weight: 600; line-height: 1.50; color: rgba(255,255,255,0.88); }
+.bre  { font-size: 30px; font-weight: 400; line-height: 1.65; color: rgba(255,255,255,0.45); }
+.wbbe { font-size: 32px; font-weight: 600; line-height: 1.50; color: #1A1A1A; }
+.wbre { font-size: 30px; font-weight: 400; line-height: 1.65; color: #777777; }
 
 /* SUBTITLE PILL — hook */
 .sub-pile {
   display: inline-flex; align-items: center;
   border: 1px solid rgba(255,255,255,0.18);
   border-radius: 100px; padding: 13px 32px;
-  font-size: 20px; font-weight: 400; font-style: italic;
+  font-size: 26px; font-weight: 400; font-style: italic;
   color: rgba(255,255,255,0.65); margin-top: 48px;
   font-family: 'Playfair Display', serif;
 }
@@ -117,7 +117,7 @@ body { width: 1080px; background: #0E0E0E; font-family: 'Outfit', sans-serif; }
 }
 .stat-rowe:first-child { border-top: 1px solid rgba(255,255,255,0.08); }
 .stat-lble {
-  font-size: 21px; font-weight: 400; color: rgba(255,255,255,0.44);
+  font-size: 27px; font-weight: 400; color: rgba(255,255,255,0.44);
   flex: 1; line-height: 1.4;
 }
 .stat-vale {
@@ -150,8 +150,8 @@ body { width: 1080px; background: #0E0E0E; font-family: 'Outfit', sans-serif; }
   color: rgba(255,255,255,0.22); min-width: 32px; padding-top: 5px;
   letter-spacing: 0.06em;
 }
-.step-title { font-size: 23px; font-weight: 700; color: rgba(255,255,255,0.88); line-height: 1.35; margin-bottom: 7px; }
-.step-desc  { font-size: 22px; font-weight: 400; color: rgba(255,255,255,0.40); line-height: 1.55; }
+.step-title { font-size: 29px; font-weight: 700; color: rgba(255,255,255,0.88); line-height: 1.35; margin-bottom: 7px; }
+.step-desc  { font-size: 27px; font-weight: 400; color: rgba(255,255,255,0.40); line-height: 1.55; }
 
 /* TERMINAL WINDOW — for list/step slides */
 .terminal {
@@ -179,10 +179,10 @@ body { width: 1080px; background: #0E0E0E; font-family: 'Outfit', sans-serif; }
 .findinge:nth-last-child(-n+2) { border-bottom: none; }
 .finding-titlee {
   font-family: 'Playfair Display', serif;
-  font-size: 26px; font-weight: 700; color: #1A1A1A;
+  font-size: 32px; font-weight: 700; color: #1A1A1A;
   line-height: 1.3; margin-bottom: 9px; font-style: italic;
 }
-.finding-desce { font-size: 20px; font-weight: 400; color: #888880; line-height: 1.55; }
+.finding-desce { font-size: 26px; font-weight: 400; color: #888880; line-height: 1.55; }
 
 /* COMPANY GRID */
 .co-gride { display: grid; grid-template-columns: 1fr 1fr; margin-top: 40px; }
@@ -192,9 +192,9 @@ body { width: 1080px; background: #0E0E0E; font-family: 'Outfit', sans-serif; }
 .co-iteme:nth-last-child(-n+2) { border-bottom: none; }
 .co-namee {
   font-family: 'Playfair Display', serif;
-  font-size: 24px; font-weight: 700; color: #1A1A1A; font-style: italic;
+  font-size: 30px; font-weight: 700; color: #1A1A1A; font-style: italic;
 }
-.co-rolee { font-size: 18px; color: #999990; margin-top: 3px; }
+.co-rolee { font-size: 24px; color: #999990; margin-top: 3px; }
 `;
 
 function esc(s: string): string {
@@ -255,7 +255,7 @@ function buildData(s: Slide, handle: string, index: number, total: number): stri
     .map(st => `<div class="stat-rowe"><span class="stat-lble">${esc(st.label)}</span><span class="stat-vale">${esc(st.value)}</span></div>`)
     .join('');
   const footnote = s.footnote
-    ? `<p style="margin-top:28px;font-size:20px;font-weight:400;color:rgba(255,255,255,0.30);line-height:1.55;">${esc(s.footnote)}</p>`
+    ? `<p style="margin-top:28px;font-size:26px;font-weight:400;color:rgba(255,255,255,0.30);line-height:1.55;">${esc(s.footnote)}</p>`
     : '';
   return `<section class="slide dke" id="slide-${s.id}">
   <div class="handle-tle">${esc(handle)}</div>
@@ -349,7 +349,7 @@ ${items}
 
 function buildCTA(s: Slide, handle: string, pageName: string, index: number, total: number): string {
   const tagline = s.tagline
-    ? `<div style="margin-top:36px;max-width:740px;font-family:'Playfair Display',serif;font-size:26px;font-weight:400;font-style:italic;line-height:1.60;color:#5A5248;">${esc(s.tagline)}</div>`
+    ? `<div style="margin-top:36px;max-width:740px;font-family:'Playfair Display',serif;font-size:32px;font-weight:400;font-style:italic;line-height:1.60;color:#5A5248;">${esc(s.tagline)}</div>`
     : '';
   return `<section class="slide cte" id="slide-${s.id}">
   <div class="pade" style="padding-top:420px;">
