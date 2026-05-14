@@ -148,36 +148,18 @@ export default function HomePage() {
           </Field>
 
           <Field label="Template" hint="Visual style">
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-              <div style={{ display: 'flex', gap: 8 }}>
-                {(
-                  [
-                    { value: 'default',        label: 'Dark Charcoal',  sub: 'Gradient headlines · data explainers' },
-                    { value: 'wolf-v2',        label: 'Bold Report',    sub: 'ALL CAPS + red accent · metrics' },
-                  ] as const
-                ).map(({ value: t, label, sub }) => (
-                  <ThemeBtn key={t} active={theme === t} onClick={() => setTheme(t)} label={label} sub={sub} />
-                ))}
-              </div>
-              <div style={{ display: 'flex', gap: 8 }}>
-                {(
-                  [
-                    { value: 'editorial-step', label: 'Cream Tutorial',  sub: 'Playfair serif · step-by-step guides' },
-                    { value: 'ascii-pixel',    label: 'ASCII Terminal', sub: 'Space Mono · globe · AI/tech topics' },
-                  ] as const
-                ).map(({ value: t, label, sub }) => (
-                  <ThemeBtn key={t} active={theme === t} onClick={() => setTheme(t)} label={label} sub={sub} />
-                ))}
-              </div>
-              <div style={{ display: 'flex', gap: 8 }}>
-                {(
-                  [
-                    { value: 'editorial', label: 'Gold Noir', sub: 'Chrome yellow accent · DM Serif' },
-                  ] as const
-                ).map(({ value: t, label, sub }) => (
-                  <ThemeBtn key={t} active={theme === t} onClick={() => setTheme(t)} label={label} sub={sub} />
-                ))}
-              </div>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
+              {(
+                [
+                  { value: 'default',        label: 'Dark Charcoal',  sub: 'Data explainers',      thumb: '/thumbnails/default.png'        },
+                  { value: 'wolf-v2',        label: 'Bold Report',    sub: 'Metrics & results',    thumb: '/thumbnails/wolf-v2.png'        },
+                  { value: 'editorial-step', label: 'Cream Tutorial', sub: 'Step-by-step guides',  thumb: '/thumbnails/editorial-step.png' },
+                  { value: 'ascii-pixel',    label: 'ASCII Terminal', sub: 'AI / tech topics',     thumb: '/thumbnails/ascii-pixel.png'    },
+                  { value: 'editorial',      label: 'Gold Noir',      sub: 'Chrome yellow accent', thumb: '/thumbnails/editorial.png'      },
+                ] as const
+              ).map(({ value: t, label, sub, thumb }) => (
+                <ThemeBtn key={t} active={theme === t} onClick={() => setTheme(t)} label={label} sub={sub} thumb={thumb} />
+              ))}
             </div>
           </Field>
 
@@ -239,32 +221,52 @@ export default function HomePage() {
   );
 }
 
-function ThemeBtn({ active, onClick, label, sub }: { active: boolean; onClick: () => void; label: string; sub: string }) {
+function ThemeBtn({ active, onClick, label, sub, thumb }: { active: boolean; onClick: () => void; label: string; sub: string; thumb?: string }) {
   return (
     <motion.button
       type="button"
       onClick={onClick}
       style={{
-        flex: 1,
-        padding: '10px 14px',
+        padding: 0,
         borderRadius: 'var(--radius)',
-        fontSize: 13,
-        fontWeight: 600,
-        border: '1px solid',
+        border: '2px solid',
         cursor: 'pointer',
         textAlign: 'left',
+        overflow: 'hidden',
+        background: 'transparent',
       }}
       animate={{
-        background: active ? 'var(--accent)' : 'var(--surface)',
         borderColor: active ? 'var(--accent)' : 'var(--border)',
-        color: active ? '#ffffff' : 'rgba(255,255,255,0.55)',
       }}
       whileHover={{ scale: !active ? 1.02 : 1 }}
       whileTap={{ scale: 0.97 }}
       transition={{ type: 'spring', stiffness: 400, damping: 32 }}
     >
-      <div>{label}</div>
-      <div style={{ fontSize: 11, fontWeight: 400, marginTop: 2, opacity: active ? 0.75 : 0.50 }}>{sub}</div>
+      {thumb && (
+        <div style={{ width: '100%', aspectRatio: '1080 / 1350', overflow: 'hidden', position: 'relative' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={thumb}
+            alt={label}
+            style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'top', display: 'block' }}
+          />
+          {active && (
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: 'rgba(var(--accent-rgb, 74,144,226), 0.18)',
+              pointerEvents: 'none',
+            }} />
+          )}
+        </div>
+      )}
+      <motion.div
+        style={{ padding: '8px 10px' }}
+        animate={{ background: active ? 'var(--accent)' : 'var(--surface)' }}
+        transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+      >
+        <div style={{ fontSize: 12, fontWeight: 600, color: active ? '#ffffff' : 'rgba(255,255,255,0.80)' }}>{label}</div>
+        <div style={{ fontSize: 10, fontWeight: 400, marginTop: 1, color: active ? 'rgba(255,255,255,0.70)' : 'rgba(255,255,255,0.40)' }}>{sub}</div>
+      </motion.div>
     </motion.button>
   );
 }
