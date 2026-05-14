@@ -51,10 +51,10 @@ body { width: 1080px; background: #0D0D0D; font-family: 'Outfit', sans-serif; }
   position: absolute;
   inset: 0;
   padding: 90px;
-  padding-top: 490px;
+  padding-top: 350px;
   z-index: 2;
 }
-.lt2 .pad2 { padding-top: 460px; }
+.lt2 .pad2 { padding-top: 350px; }
 
 /* HANDLE PILL */
 .handle-tl2 {
@@ -189,9 +189,9 @@ function hookSizeClass(s: Slide): { cls: string; padTop: number } {
     .filter(Boolean)
     .map(t => t!.replace(/^~/, '').length)
     .reduce((a, b) => a + b, 0);
-  if (totalChars <= 28) return { cls: 'h2-xl', padTop: 540 };
-  if (totalChars <= 45) return { cls: 'h2',    padTop: 500 };
-  return                       { cls: 'h2-sm', padTop: 470 };
+  if (totalChars <= 28) return { cls: 'h2-xl', padTop: 460 };
+  if (totalChars <= 45) return { cls: 'h2',    padTop: 420 };
+  return                       { cls: 'h2-sm', padTop: 385 };
 }
 
 function buildHook(s: Slide, handle: string, index: number, total: number): string {
@@ -269,7 +269,7 @@ function buildList(s: Slide, handle: string, index: number, total: number): stri
   return `<section class="slide dk2" id="slide-${s.id}">
   <div class="red-bar"></div>
   <div class="handle-tl2">${esc(handle)}</div>
-  <div class="pad2" style="padding-top:360px;">
+  <div class="pad2" style="padding-top:300px;">
     <div class="h2-sm">${headlineLines(s, false)}</div>
     <div style="margin-top:44px;display:flex;flex-direction:column;">
 ${items}
@@ -285,7 +285,7 @@ function buildGrid(s: Slide, index: number, total: number): string {
     .join('\n');
   return `<section class="slide lt2" id="slide-${s.id}">
   <div style="position:absolute;top:0;left:0;right:0;height:4px;background:#E02020;z-index:4;"></div>
-  <div class="pad2" style="padding-top:380px;">
+  <div class="pad2" style="padding-top:300px;">
     <div class="h2-sm h2-lk">${headlineLines(s, true)}</div>
     <div class="co-grid2">
 ${items}
@@ -301,7 +301,7 @@ function buildFindings(s: Slide, index: number, total: number): string {
     .join('\n');
   return `<section class="slide lt2" id="slide-${s.id}">
   <div style="position:absolute;top:0;left:0;right:0;height:4px;background:#E02020;z-index:4;"></div>
-  <div class="pad2" style="padding-top:380px;">
+  <div class="pad2" style="padding-top:300px;">
     <div class="h2 h2-lk">${headlineLines(s, true)}</div>
     <div class="findings-grid2" style="margin-top:44px;">
 ${items}
@@ -318,7 +318,7 @@ function buildCTA(s: Slide, handle: string, pageName: string, index: number, tot
   return `<section class="slide ct2" id="slide-${s.id}">
   <div class="red-bar"></div>
   <div class="handle-tl2">${esc(handle)}</div>
-  <div style="position:absolute;inset:0;padding:90px;padding-top:420px;z-index:2;">
+  <div style="position:absolute;inset:0;padding:90px;padding-top:350px;z-index:2;">
     <div style="font-size:12px;font-weight:900;letter-spacing:0.18em;color:#E02020;text-transform:uppercase;margin-bottom:32px;">Follow for more</div>
     <div style="font-family:'Outfit',sans-serif;font-weight:900;font-size:100px;line-height:0.90;letter-spacing:-0.02em;color:#FFFFFF;text-transform:uppercase;">${esc(pageName)}.</div>
     ${tagline}

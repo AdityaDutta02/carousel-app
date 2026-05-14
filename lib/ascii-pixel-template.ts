@@ -90,10 +90,10 @@ body { width: 1080px; background: #1C1C1C; font-family: 'Space Mono', monospace;
 /* CONTENT PAD */
 .padp {
   position: absolute; inset: 0;
-  padding: 90px; padding-top: 490px;
+  padding: 90px; padding-top: 350px;
   z-index: 2;
 }
-.ltp .padp { padding-top: 460px; }
+.ltp .padp { padding-top: 350px; }
 
 /* PROGRESS DOT TRACK */
 .dot-track {
@@ -252,9 +252,9 @@ function hookSizeClass(s: Slide): { cls: string; padTop: number } {
     .filter(Boolean)
     .map(t => t!.replace(/^~/, '').length)
     .reduce((a, b) => a + b, 0);
-  if (totalChars <= 24) return { cls: 'hp-xl', padTop: 540 };
-  if (totalChars <= 40) return { cls: 'hp',    padTop: 500 };
-  return                       { cls: 'hp-sm', padTop: 465 };
+  if (totalChars <= 24) return { cls: 'hp-xl', padTop: 460 };
+  if (totalChars <= 40) return { cls: 'hp',    padTop: 420 };
+  return                       { cls: 'hp-sm', padTop: 385 };
 }
 
 function buildHook(s: Slide, handle: string, index: number, total: number): string {
@@ -330,7 +330,7 @@ function buildList(s: Slide, handle: string, index: number, total: number): stri
     .join('\n');
   return `<section class="slide dkp" id="slide-${s.id}">
   <div class="handle-tlp">${esc(handle)}</div>
-  <div class="padp" style="padding-top:360px;">
+  <div class="padp" style="padding-top:300px;">
     <div class="hp-sm">${headlineLines(s, false)}</div>
     <div style="margin-top:44px;display:flex;flex-direction:column;">
 ${items}
@@ -345,7 +345,7 @@ function buildGrid(s: Slide, index: number, total: number): string {
     .map(item => `      <div class="co-itemp"><div class="co-namep">${esc(item.name)}</div><div class="co-rolep">${esc(item.role)}</div></div>`)
     .join('\n');
   return `<section class="slide ltp" id="slide-${s.id}">
-  <div class="padp" style="padding-top:380px;">
+  <div class="padp" style="padding-top:300px;">
     <div class="hp-sm hp-lk">${headlineLines(s, true)}</div>
     <div class="co-gridp">
 ${items}
@@ -360,7 +360,7 @@ function buildFindings(s: Slide, index: number, total: number): string {
     .map(item => `      <div class="findingp"><div class="finding-titlep">${esc(item.name)}</div><div class="finding-descp">${esc(item.role)}</div></div>`)
     .join('\n');
   return `<section class="slide ltp" id="slide-${s.id}">
-  <div class="padp" style="padding-top:380px;">
+  <div class="padp" style="padding-top:300px;">
     <div class="hp hp-lk">${headlineLines(s, true)}</div>
     <div class="findings-gridp" style="margin-top:44px;">
 ${items}
@@ -377,7 +377,7 @@ function buildCTA(s: Slide, handle: string, pageName: string, index: number, tot
   return `<section class="slide ctp" id="slide-${s.id}">
   ${PIXEL_BOT}
   <div class="handle-tlp">${esc(handle)}</div>
-  <div style="position:absolute;inset:0;padding:90px;padding-top:420px;z-index:2;">
+  <div style="position:absolute;inset:0;padding:90px;padding-top:350px;z-index:2;">
     <div style="font-size:11px;font-weight:700;letter-spacing:0.16em;color:${ORANGE};text-transform:uppercase;margin-bottom:32px;">Follow for more</div>
     <div style="font-family:'Space Mono',monospace;font-weight:700;font-size:88px;line-height:0.90;letter-spacing:-0.03em;color:#FFFFFF;">${esc(pageName)}.</div>
     ${tagline}

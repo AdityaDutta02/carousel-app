@@ -48,9 +48,13 @@ COPY RULES:
 - Minimum sentence length: 8 words. A good target is 12–20 words per sentence.
 - CORRECT body: "Covered calls pay you to wait — flat market, sideways stock, that's when premium income compounds quietly while everyone else frets about the rally they're missing."
 - WRONG body: "Covered calls work. You get paid. Simple."
-- Banned words: "landscape", "pivotal", "reshaping", "leverage", "game-changer", "dive into", "delve", "quietly", "it's no secret", "more than ever"
-- Banned structures: "Here are X things you need to know", "In today's world", "More than ever before"
+- Banned words: "landscape", "pivotal", "reshaping", "leverage", "game-changer", "dive into", "delve", "quietly", "simply", "just", "it's no secret", "more than ever"
+- Banned structures: "Here are X things you need to know", "In today's world", "More than ever before", "Not just X — it's Y", "a species crossed", "a turning point", "a threshold surpassed"
+- No em dashes in body copy — use colons or periods instead ("73%: this shocked analysts" not "73% — a number that shocked analysts")
+- No significance inflation — remove phrases like "reshaping the landscape", "pivotal moment", "transformative potential". State the fact, not its importance.
+- No grandiose last sentences — end the final body slide with a specific fact or number, not an emotional statement
 - End slides with implications or actions — never with vague positivity
+- AEO test: every headline must work as a standalone cited fact out of context. If it requires surrounding slides to make sense, rewrite it.
 
 RESEARCH RULE: Use only facts from the research provided. Cite verbatim numbers — do not paraphrase or round statistics. Every stat must name its source. If the research lacks a specific number for a slide idea, cut that slide. Never invent data.
 

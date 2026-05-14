@@ -64,10 +64,10 @@ body {
   position: absolute;
   inset: 0;
   padding: 90px;
-  padding-top: 490px;
+  padding-top: 350px;
   z-index: 2;
 }
-.wt .pad { padding-top: 460px; }
+.wt .pad { padding-top: 350px; }
 
 /* HANDLE PILL */
 .handle-tl {
@@ -307,9 +307,9 @@ function hookSizeClass(s: Slide): { cls: string; padTop: number } {
     .filter(Boolean)
     .map(t => t!.replace(/^~/, '').length)
     .reduce((a, b) => a + b, 0);
-  if (totalChars <= 28) return { cls: 'h1-xl', padTop: 560 };
-  if (totalChars <= 45) return { cls: 'h1',    padTop: 520 };
-  return                       { cls: 'h1-sm', padTop: 490 };
+  if (totalChars <= 28) return { cls: 'h1-xl', padTop: 460 };
+  if (totalChars <= 45) return { cls: 'h1',    padTop: 420 };
+  return                       { cls: 'h1-sm', padTop: 385 };
 }
 
 function buildHook(s: Slide, handle: string, index: number, total: number): string {
@@ -381,7 +381,7 @@ function buildList(s: Slide, handle: string, index: number, total: number): stri
     .join('\n');
   return `<section class="slide dk" id="slide-${s.id}">
   <div class="handle-tl">${esc(handle)}</div>
-  <div class="pad" style="padding-top:370px;">
+  <div class="pad" style="padding-top:300px;">
     <div class="h1-sm">${headlineLines(s, false)}</div>
     <div style="margin-top:50px;display:flex;flex-direction:column;">
 ${items}
@@ -396,7 +396,7 @@ function buildGrid(s: Slide, index: number, total: number): string {
     .map(item => `      <div class="co-item"><div class="co-name">${esc(item.name)}</div><div class="co-role">${esc(item.role)}</div></div>`)
     .join('\n');
   return `<section class="slide wt" id="slide-${s.id}">
-  <div class="pad" style="padding-top:390px;">
+  <div class="pad" style="padding-top:300px;">
     <div class="h1-sm blk">${headlineLines(s, true)}</div>
     <div class="co-grid">
 ${items}
@@ -411,7 +411,7 @@ function buildFindings(s: Slide, index: number, total: number): string {
     .map(item => `      <div class="finding"><div class="finding-title">${esc(item.name)}</div><div class="finding-desc">${esc(item.role)}</div></div>`)
     .join('\n');
   return `<section class="slide wt" id="slide-${s.id}">
-  <div class="pad" style="padding-top:390px;">
+  <div class="pad" style="padding-top:300px;">
     <div class="h1 blk">${headlineLines(s, true)}</div>
     <div class="findings-grid" style="margin-top:44px;">
 ${items}
@@ -425,7 +425,7 @@ function buildCTA(s: Slide, handle: string, pageName: string, index: number, tot
   const tagline = s.tagline ? `<div style="margin-top:40px;max-width:740px;font-size:34px;font-weight:400;line-height:1.50;color:rgba(255,255,255,0.78);">${esc(s.tagline)}</div>` : '';
   return `<section class="slide ct" id="slide-${s.id}">
   <div class="handle-tl">${esc(handle)}</div>
-  <div style="position:absolute;inset:0;padding:90px;padding-top:430px;z-index:2;">
+  <div style="position:absolute;inset:0;padding:90px;padding-top:350px;z-index:2;">
     <div style="font-size:13px;font-weight:700;letter-spacing:0.14em;color:rgba(255,255,255,0.50);text-transform:uppercase;margin-bottom:36px;">Follow for more</div>
     <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:108px;line-height:0.90;letter-spacing:-0.04em;color:#FFFFFF;">${esc(pageName)}.</div>
     ${tagline}

@@ -22,10 +22,10 @@ body { width: 1080px; background: #0E0E0E; font-family: 'Outfit', sans-serif; }
 /* CONTENT PAD */
 .pade {
   position: absolute; inset: 0;
-  padding: 90px; padding-top: 480px;
+  padding: 90px; padding-top: 350px;
   z-index: 2;
 }
-.cre .pade, .cte .pade { padding-top: 450px; }
+.cre .pade, .cte .pade { padding-top: 350px; }
 
 /* HANDLE PILL */
 .handle-tle {
@@ -230,9 +230,9 @@ function hookSizeClass(s: Slide): { cls: string; padTop: number } {
     .filter(Boolean)
     .map(t => t!.replace(/^~/, '').length)
     .reduce((a, b) => a + b, 0);
-  if (totalChars <= 28) return { cls: 'he-xl', padTop: 560 };
-  if (totalChars <= 45) return { cls: 'he',    padTop: 510 };
-  return                       { cls: 'he-sm', padTop: 475 };
+  if (totalChars <= 28) return { cls: 'he-xl', padTop: 460 };
+  if (totalChars <= 45) return { cls: 'he',    padTop: 420 };
+  return                       { cls: 'he-sm', padTop: 385 };
 }
 
 function buildHook(s: Slide, handle: string, index: number, total: number): string {
@@ -304,7 +304,7 @@ function buildList(s: Slide, handle: string, index: number, total: number): stri
     .join('');
   return `<section class="slide dke" id="slide-${s.id}">
   <div class="handle-tle">${esc(handle)}</div>
-  <div class="pade" style="padding-top:360px;">
+  <div class="pade" style="padding-top:300px;">
     <div class="step-lbl">— Step by step</div>
     <div class="he-sm">${headlineLines(s, false)}</div>
     <div style="margin-top:40px;display:flex;flex-direction:column;">
@@ -320,7 +320,7 @@ function buildGrid(s: Slide, index: number, total: number): string {
     .map(item => `      <div class="co-iteme"><div class="co-namee">${esc(item.name)}</div><div class="co-rolee">${esc(item.role)}</div></div>`)
     .join('\n');
   return `<section class="slide cre" id="slide-${s.id}">
-  <div class="pade" style="padding-top:380px;">
+  <div class="pade" style="padding-top:300px;">
     <div class="step-lbl-lk">Overview</div>
     <div class="he-sm he-lk">${headlineLines(s, true)}</div>
     <div class="co-gride">
@@ -336,7 +336,7 @@ function buildFindings(s: Slide, index: number, total: number): string {
     .map(item => `      <div class="findinge"><div class="finding-titlee">${esc(item.name)}</div><div class="finding-desce">${esc(item.role)}</div></div>`)
     .join('\n');
   return `<section class="slide cre" id="slide-${s.id}">
-  <div class="pade" style="padding-top:380px;">
+  <div class="pade" style="padding-top:300px;">
     <div class="step-lbl-lk">Key findings</div>
     <div class="he he-lk">${headlineLines(s, true)}</div>
     <div class="findings-gride" style="margin-top:44px;">
@@ -352,7 +352,7 @@ function buildCTA(s: Slide, handle: string, pageName: string, index: number, tot
     ? `<div style="margin-top:36px;max-width:740px;font-family:'Playfair Display',serif;font-size:32px;font-weight:400;font-style:italic;line-height:1.60;color:#5A5248;">${esc(s.tagline)}</div>`
     : '';
   return `<section class="slide cte" id="slide-${s.id}">
-  <div class="pade" style="padding-top:420px;">
+  <div class="pade" style="padding-top:350px;">
     <div style="font-size:11px;font-weight:700;letter-spacing:0.18em;color:rgba(0,0,0,0.30);text-transform:uppercase;margin-bottom:32px;">Follow for more</div>
     <div style="font-family:'Playfair Display',serif;font-weight:700;font-size:104px;line-height:0.90;letter-spacing:-0.01em;color:#1A1A1A;font-style:italic;">${esc(pageName)}.</div>
     ${tagline}
