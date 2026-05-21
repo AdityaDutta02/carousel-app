@@ -6,7 +6,25 @@ import { motion, AnimatePresence } from 'framer-motion';
 import type { Slide, CarouselMeta } from '@/lib/types';
 import { useEmbedToken } from '@/hooks/use-embed-token';
 
+type Theme = NonNullable<CarouselMeta['theme']>;
+
 const ease: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
+
+const TEMPLATES: Array<{ value: Theme; label: string; sub: string; thumb: string }> = [
+  { value: 'marrakech',  label: 'Marrakech',  sub: 'Dark charcoal · data explainers',      thumb: '/thumbnails/marrakech.webp'  },
+  { value: 'reykjavik',  label: 'Reykjavik',  sub: 'Bold report · metrics & results',       thumb: '/thumbnails/reykjavik.webp'  },
+  { value: 'valletta',   label: 'Valletta',   sub: 'Cream tutorial · step-by-step guides',  thumb: '/thumbnails/valletta.webp'   },
+  { value: 'tbilisi',    label: 'Tbilisi',    sub: 'ASCII terminal · AI & tech topics',      thumb: '/thumbnails/tbilisi.webp'    },
+  { value: 'havana',     label: 'Havana',     sub: 'Gold noir · chrome yellow accent',       thumb: '/thumbnails/havana.png'      },
+  { value: 'medellin',   label: 'Medellín',   sub: 'Figr manifesto · principle frameworks', thumb: '/thumbnails/medellin.png'    },
+  { value: 'luanda',     label: 'Luanda',     sub: 'Figr brutalist · bold critiques',        thumb: '/thumbnails/luanda.webp'     },
+  { value: 'tangier',    label: 'Tangier',    sub: 'Figr before/after · shift contrasts',   thumb: '/thumbnails/tangier.png'     },
+  { value: 'tallinn',    label: 'Tallinn',    sub: 'Figr system · data & research',          thumb: '/thumbnails/tallinn.webp'    },
+  { value: 'cartagena',  label: 'Cartagena',  sub: 'Figr color sequence · sequential',      thumb: '/thumbnails/cartagena.webp'  },
+  { value: 'kyoto',      label: 'Kyoto',      sub: 'Figr notebook · spacing & editorial',   thumb: '/thumbnails/kyoto.webp'      },
+  { value: 'copenhagen', label: 'Copenhagen', sub: 'Bold blue grotesk · electric contrast', thumb: '/thumbnails/copenhagen.webp' },
+  { value: 'zurich',     label: 'Zürich',     sub: 'Color blocks · architectural splits',   thumb: '/thumbnails/zurich.webp'     },
+];
 
 export default function HomePage() {
   const router = useRouter();
@@ -14,7 +32,7 @@ export default function HomePage() {
   const [topic, setTopic] = useState('');
   const [handle, setHandle] = useState('@');
   const [pageName, setPageName] = useState('');
-  const [theme, setTheme] = useState<'default' | 'editorial' | 'wolf-v2' | 'editorial-step' | 'ascii-pixel'>('default');
+  const [theme, setTheme] = useState<Theme>('marrakech');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -47,177 +65,215 @@ export default function HomePage() {
   }
 
   return (
-    <main style={{
-      minHeight: 'calc(100dvh - 52px)',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '48px 20px',
-      position: 'relative',
-      overflow: 'hidden',
-    }}>
-      {/* Ambient glow */}
-      <div style={{
-        position: 'absolute',
-        top: '40%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: 700,
-        height: 700,
-        background: 'radial-gradient(circle, rgba(232,137,74,0.055) 0%, transparent 65%)',
-        pointerEvents: 'none',
-      }} />
+    <>
+      <style>{`
+        @media (max-width: 900px) {
+          .page-cols { flex-direction: column !important; max-width: 520px !important; }
+          .right-panel { max-height: none !important; overflow-y: visible !important; }
+          .template-grid { grid-template-columns: repeat(3, 1fr) !important; }
+        }
+      `}</style>
+      <main style={{
+        minHeight: 'calc(100dvh - 52px)',
+        display: 'flex',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        padding: '48px 20px',
+        position: 'relative',
+        overflow: 'hidden',
+      }}>
+        {/* Ambient glow */}
+        <div style={{
+          position: 'absolute',
+          top: '40%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: 700,
+          height: 700,
+          background: 'radial-gradient(circle, rgba(232,137,74,0.055) 0%, transparent 65%)',
+          pointerEvents: 'none',
+        }} />
 
-      <motion.div
-        style={{ width: '100%', maxWidth: 520, position: 'relative' }}
-        initial={{ opacity: 0, y: 22 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease }}
-      >
-        {/* Header */}
         <motion.div
-          style={{ marginBottom: 44 }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.08, duration: 0.45 }}
-        >
-          <span style={{
-            display: 'inline-block',
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            color: 'var(--accent)',
-            marginBottom: 14,
-          }}>
-            AI-powered carousel generator
-          </span>
-          <h1 style={{
-            fontSize: 'clamp(30px, 5vw, 44px)',
-            fontWeight: 800,
-            letterSpacing: '-0.03em',
-            lineHeight: 1.05,
-            marginBottom: 12,
-          }}>
-            Carousel Studio
-          </h1>
-          <p style={{ color: 'var(--ink-muted)', fontSize: 15, lineHeight: 1.65 }}>
-            Enter a topic and we&apos;ll research, write, and design your slides.
-          </p>
-        </motion.div>
-
-        {/* Form */}
-        <motion.form
-          onSubmit={handleSubmit}
-          style={{ display: 'flex', flexDirection: 'column', gap: 22 }}
-          initial={{ opacity: 0, y: 10 }}
+          className="page-cols"
+          style={{
+            width: '100%',
+            maxWidth: 1100,
+            display: 'flex',
+            gap: 48,
+            alignItems: 'flex-start',
+            position: 'relative',
+          }}
+          initial={{ opacity: 0, y: 22 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.18, duration: 0.45, ease }}
+          transition={{ duration: 0.5, ease }}
         >
-          <Field label="Topic" hint="What should it be about?">
-            <input
-              type="text"
-              value={topic}
-              onChange={e => setTopic(e.target.value)}
-              placeholder="e.g. seed funding for startups"
-              required
-              className="field-input"
-            />
-          </Field>
+          {/* ── LEFT COL: inputs ── */}
+          <div style={{ width: 420, flexShrink: 0 }}>
+            {/* Header */}
+            <motion.div
+              style={{ marginBottom: 44 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.08, duration: 0.45 }}
+            >
+              <span style={{
+                display: 'inline-block',
+                fontSize: 11,
+                fontWeight: 700,
+                letterSpacing: '0.12em',
+                textTransform: 'uppercase',
+                color: 'var(--accent)',
+                marginBottom: 14,
+              }}>
+                AI-powered carousel generator
+              </span>
+              <h1 style={{
+                fontSize: 'clamp(30px, 5vw, 44px)',
+                fontWeight: 800,
+                letterSpacing: '-0.03em',
+                lineHeight: 1.05,
+                marginBottom: 12,
+              }}>
+                Carousel Studio
+              </h1>
+              <p style={{ color: 'var(--ink-muted)', fontSize: 15, lineHeight: 1.65 }}>
+                Enter a topic and we&apos;ll research, write, and design your slides.
+              </p>
+            </motion.div>
 
-          <Field label="Page name" hint="Your Instagram display name">
-            <input
-              type="text"
-              value={pageName}
-              onChange={e => setPageName(e.target.value)}
-              placeholder="e.g. The Founder Lab"
-              required
-              className="field-input"
-            />
-          </Field>
+            {/* Form */}
+            <motion.form
+              onSubmit={handleSubmit}
+              style={{ display: 'flex', flexDirection: 'column', gap: 22 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.18, duration: 0.45, ease }}
+            >
+              <Field label="Topic" hint="What should it be about?">
+                <input
+                  type="text"
+                  value={topic}
+                  onChange={e => setTopic(e.target.value)}
+                  placeholder="e.g. seed funding for startups"
+                  required
+                  className="field-input"
+                />
+              </Field>
 
-          <Field label="Handle" hint="Your @handle">
-            <input
-              type="text"
-              value={handle}
-              onChange={e => setHandle(e.target.value)}
-              placeholder="@yourhandle"
-              required
-              className="field-input"
-            />
-          </Field>
+              <Field label="Page name" hint="Your Instagram display name">
+                <input
+                  type="text"
+                  value={pageName}
+                  onChange={e => setPageName(e.target.value)}
+                  placeholder="e.g. The Founder Lab"
+                  required
+                  className="field-input"
+                />
+              </Field>
 
-          <Field label="Template" hint="Visual style">
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 8 }}>
-              {(
-                [
-                  { value: 'default',        label: 'Dark Charcoal',  sub: 'Data explainers',      thumb: '/thumbnails/default.png'        },
-                  { value: 'wolf-v2',        label: 'Bold Report',    sub: 'Metrics & results',    thumb: '/thumbnails/wolf-v2.png'        },
-                  { value: 'editorial-step', label: 'Cream Tutorial', sub: 'Step-by-step guides',  thumb: '/thumbnails/editorial-step.png' },
-                  { value: 'ascii-pixel',    label: 'ASCII Terminal', sub: 'AI / tech topics',     thumb: '/thumbnails/ascii-pixel.png'    },
-                  { value: 'editorial',      label: 'Gold Noir',      sub: 'Chrome yellow accent', thumb: '/thumbnails/editorial.png'      },
-                ] as const
-              ).map(({ value: t, label, sub, thumb }) => (
+              <Field label="Handle" hint="Your @handle">
+                <input
+                  type="text"
+                  value={handle}
+                  onChange={e => setHandle(e.target.value)}
+                  placeholder="@yourhandle"
+                  required
+                  className="field-input"
+                />
+              </Field>
+
+              <AnimatePresence>
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6, height: 0 }}
+                    animate={{ opacity: 1, y: 0, height: 'auto' }}
+                    exit={{ opacity: 0, y: -6, height: 0 }}
+                    transition={{ duration: 0.22 }}
+                    style={{
+                      background: 'rgba(220,60,60,0.10)',
+                      border: '1px solid rgba(220,60,60,0.22)',
+                      borderRadius: 8,
+                      padding: '12px 16px',
+                      color: '#ff7a7a',
+                      fontSize: 14,
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {error}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <motion.button
+                type="submit"
+                disabled={loading}
+                style={{
+                  marginTop: 4,
+                  padding: '15px 24px',
+                  background: loading ? 'rgba(255,255,255,0.05)' : 'var(--accent)',
+                  color: loading ? 'var(--ink-muted)' : '#fff',
+                  border: 'none',
+                  borderRadius: 'var(--radius)',
+                  fontSize: 15,
+                  fontWeight: 700,
+                  letterSpacing: '0.01em',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 6,
+                }}
+                whileHover={!loading ? { scale: 1.02, y: -1 } : {}}
+                whileTap={!loading ? { scale: 0.98 } : {}}
+                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              >
+                {loading ? (
+                  <>
+                    Researching &amp; writing
+                    <LoadingDots />
+                  </>
+                ) : 'Generate slides →'}
+              </motion.button>
+            </motion.form>
+          </div>
+
+          {/* ── RIGHT COL: template selector ── */}
+          <motion.div
+            className="right-panel"
+            style={{
+              flex: 1,
+              minWidth: 0,
+              maxHeight: 'calc(100dvh - 120px)',
+              overflowY: 'auto',
+              paddingRight: 4,
+            }}
+            initial={{ opacity: 0, x: 16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.22, duration: 0.45, ease }}
+          >
+            <div style={{
+              fontSize: 11,
+              fontWeight: 700,
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              color: 'var(--ink-faint)',
+              marginBottom: 14,
+            }}>
+              Template — {TEMPLATES.find(t => t.value === theme)?.label ?? theme}
+            </div>
+            <div
+              className="template-grid"
+              style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}
+            >
+              {TEMPLATES.map(({ value: t, label, sub, thumb }) => (
                 <ThemeBtn key={t} active={theme === t} onClick={() => setTheme(t)} label={label} sub={sub} thumb={thumb} />
               ))}
             </div>
-          </Field>
-
-          <AnimatePresence>
-            {error && (
-              <motion.div
-                initial={{ opacity: 0, y: -6, height: 0 }}
-                animate={{ opacity: 1, y: 0, height: 'auto' }}
-                exit={{ opacity: 0, y: -6, height: 0 }}
-                transition={{ duration: 0.22 }}
-                style={{
-                  background: 'rgba(220,60,60,0.10)',
-                  border: '1px solid rgba(220,60,60,0.22)',
-                  borderRadius: 8,
-                  padding: '12px 16px',
-                  color: '#ff7a7a',
-                  fontSize: 14,
-                  overflow: 'hidden',
-                }}
-              >
-                {error}
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          <motion.button
-            type="submit"
-            disabled={loading}
-            style={{
-              marginTop: 4,
-              padding: '15px 24px',
-              background: loading ? 'rgba(255,255,255,0.05)' : 'var(--accent)',
-              color: loading ? 'var(--ink-muted)' : '#fff',
-              border: 'none',
-              borderRadius: 'var(--radius)',
-              fontSize: 15,
-              fontWeight: 700,
-              letterSpacing: '0.01em',
-              cursor: loading ? 'not-allowed' : 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 6,
-            }}
-            whileHover={!loading ? { scale: 1.02, y: -1 } : {}}
-            whileTap={!loading ? { scale: 0.98 } : {}}
-            transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-          >
-            {loading ? (
-              <>
-                Researching &amp; writing
-                <LoadingDots />
-              </>
-            ) : 'Generate slides →'}
-          </motion.button>
-        </motion.form>
-      </motion.div>
-    </main>
+          </motion.div>
+        </motion.div>
+      </main>
+    </>
   );
 }
 

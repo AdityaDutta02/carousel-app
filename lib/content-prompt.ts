@@ -48,8 +48,14 @@ COPY RULES:
 - Minimum sentence length: 8 words. A good target is 12–20 words per sentence.
 - CORRECT body: "Covered calls pay you to wait — flat market, sideways stock, that's when premium income compounds quietly while everyone else frets about the rally they're missing."
 - WRONG body: "Covered calls work. You get paid. Simple."
-- Banned words: "landscape", "pivotal", "reshaping", "leverage", "game-changer", "dive into", "delve", "quietly", "simply", "just", "it's no secret", "more than ever"
-- Banned structures: "Here are X things you need to know", "In today's world", "More than ever before", "Not just X — it's Y", "a species crossed", "a turning point", "a threshold surpassed"
+- Banned words: "landscape", "pivotal", "reshaping", "leverage", "game-changer", "dive into", "delve", "quietly", "simply", "just", "it's no secret", "more than ever", "optimize", "utilize", "enable", "empower"
+- Banned structures: "Here are X things you need to know", "Here are X reasons", "N signs that", "N tips for", "In today's world", "More than ever before", "Not just X — it's Y", "a species crossed", "a turning point", "a threshold surpassed", "What if I told you", "Here's the thing about", "Let that sink in", "This changes everything"
+- No listicle rhythm — never open a slide with a numbered list framing ("5 ways", "3 reasons", "7 things"). Each slide states one revelation, not a list premise.
+- No source-name authority openers — never begin a sentence with "According to [source]", "A [source] study found", or "Researchers at [org] say". Lead with the fact, cite the source in parentheses or footnote after: "Toyota cut downtime 43% (McKinsey, 2024)" not "According to McKinsey, Toyota cut downtime."
+- No riddle heroes — never open with a rhetorical question that exists only to be answered ("What if I told you X?", "Have you ever wondered why X?"). Open with the fact.
+- No period after headline lines — headline fields render as display type, never end them with a full stop
+- No vague attributions — "studies show", "experts say", "research suggests", "data indicates" are banned. Every claim names the specific study, author, or institution.
+- No "Outline" section headings — never use "Outline", "Overview", "Introduction", "Conclusion" as headline text
 - No em dashes in body copy — use colons or periods instead ("73%: this shocked analysts" not "73% — a number that shocked analysts")
 - No significance inflation — remove phrases like "reshaping the landscape", "pivotal moment", "transformative potential". State the fact, not its importance.
 - No grandiose last sentences — end the final body slide with a specific fact or number, not an emotional statement
@@ -87,7 +93,7 @@ SLIDE COUNT: Output 7–12 slides. Let the research depth decide — count the d
 
 SLIDE TYPES:
 
-hook — dark slide, big headline, pill subtitle
+hook — light slide, big headline, pill subtitle
 { "type": "hook", "headline": "line1", "headline2": "~line2", "headline3": "line3", "pill": "setup sentence max 12 words" }
 Each headline line: MAX 4 WORDS. headline3 optional.
 The pill is the setup sentence — the context that makes the headline land. Use it.
@@ -122,7 +128,7 @@ cta — blue slide, page name is injected automatically, you write only the tagl
 
 ALTERNATION RULE — non-negotiable: dark and white slides MUST strictly alternate. Never place two dark slides or two white slides consecutively. The CTA (blue) always ends the sequence and is exempt.
 
-Typical sequence: hook(dark), insight(white), data(dark), insight or findings(white), list(dark), grid or findings(white), data or list(dark), insight or grid(white), cta(blue).
+Typical sequence: hook(light), insight(white), data(dark), insight or findings(white), list(dark), grid or findings(white), data or list(dark), insight or grid(white), cta(blue).
 If you have more slides: keep alternating — dark, white, dark, white — until you reach the CTA.`;
   // (unreachable when file exists - this is the fallback)
 }

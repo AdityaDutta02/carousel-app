@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
       topic: meta.topic,
       handle: meta.handle,
       pageName: meta.pageName,
-      theme: meta.theme ?? 'default',
+      theme: meta.theme ?? 'marrakech',
       slides,
       exportId,
       slideCount: slides.length,

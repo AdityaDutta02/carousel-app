@@ -49,8 +49,22 @@ body { width: 1080px; background: #1C1C1C; font-family: 'Space Mono', monospace;
 .slide { width: 1080px; height: 1350px; display: none; position: relative; overflow: hidden; }
 .slide.active { display: block; }
 
-/* DARK SLIDE — terminal dark */
-.dkp { background: #1C1C1C; }
+/* DARK SLIDE — terminal dark with vignette + grain */
+.dkp {
+  background:
+    radial-gradient(ellipse 130% 90% at 30% 20%, rgba(24,18,10,0.65) 0%, transparent 55%),
+    #1C1C1C;
+}
+.dkp::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.50' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 300px 300px;
+  opacity: 0.20;
+  pointer-events: none;
+  z-index: 1;
+}
 
 /* LIGHT SLIDE — warm beige */
 .ltp { background: #FBF6EC; }
@@ -64,7 +78,7 @@ body { width: 1080px; background: #1C1C1C; font-family: 'Space Mono', monospace;
   display: inline-flex; align-items: center;
   border: 1px solid rgba(255,255,255,0.16);
   padding: 9px 18px;
-  font-size: 12px; font-weight: 700;
+  font-size: 18px; font-weight: 700;
   letter-spacing: 0.08em; text-transform: uppercase;
   color: rgba(255,255,255,0.44); z-index: 3;
 }
@@ -73,7 +87,7 @@ body { width: 1080px; background: #1C1C1C; font-family: 'Space Mono', monospace;
   display: inline-flex; align-items: center;
   border: 1px solid rgba(255,255,255,0.16);
   padding: 9px 18px;
-  font-size: 12px; font-weight: 700;
+  font-size: 18px; font-weight: 700;
   letter-spacing: 0.08em; text-transform: uppercase;
   color: rgba(255,255,255,0.44); z-index: 3;
 }
@@ -82,7 +96,7 @@ body { width: 1080px; background: #1C1C1C; font-family: 'Space Mono', monospace;
   display: inline-flex; align-items: center;
   border: 1px solid rgba(0,0,0,0.12);
   padding: 9px 18px;
-  font-size: 12px; font-weight: 700;
+  font-size: 18px; font-weight: 700;
   letter-spacing: 0.08em; text-transform: uppercase;
   color: rgba(0,0,0,0.32); z-index: 3;
 }
@@ -185,7 +199,7 @@ body { width: 1080px; background: #1C1C1C; font-family: 'Space Mono', monospace;
 .terminal-body-p {
   padding: 20px 24px;
   font-family: 'Space Mono', monospace;
-  font-size: 16px; line-height: 1.65; color: rgba(255,255,255,0.65);
+  font-size: 22px; line-height: 1.65; color: rgba(255,255,255,0.65);
 }
 `;
 
@@ -260,16 +274,16 @@ function hookSizeClass(s: Slide): { cls: string; padTop: number } {
 function buildHook(s: Slide, handle: string, index: number, total: number): string {
   const { cls, padTop } = hookSizeClass(s);
   const pill = s.pill
-    ? `<div class="sub-pilp">${esc(s.pill)}</div>`
+    ? `<div style="display:inline-flex;align-items:center;border:1px solid rgba(0,0,0,0.14);padding:13px 28px;margin-top:44px;font-family:'Outfit',sans-serif;font-size:26px;font-weight:500;color:rgba(0,0,0,0.48);letter-spacing:0.02em;">${esc(s.pill)}</div>`
     : '';
-  return `<section class="slide dkp${index === 0 ? ' active' : ''}" id="slide-${s.id}">
-  ${ASCII_GLOBE_DARK}
-  <div class="handle-trp">${esc(handle)}</div>
+  return `<section class="slide ltp${index === 0 ? ' active' : ''}" id="slide-${s.id}">
+  ${ASCII_GLOBE_LIGHT}
+  <div style="position:absolute;top:54px;right:90px;display:inline-flex;align-items:center;border:1px solid rgba(0,0,0,0.14);padding:9px 18px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:rgba(0,0,0,0.38);z-index:3;">${esc(handle)}</div>
   <div class="padp" style="padding-top:${padTop}px;">
-    <div class="${cls}">${headlineLines(s, false)}</div>
+    <div class="${cls} hp-lk">${headlineLines(s, true)}</div>
     ${pill}
   </div>
-  ${progressDots(index, total)}
+  ${progressDotsLight(index, total)}
 </section>`;
 }
 

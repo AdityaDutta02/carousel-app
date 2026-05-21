@@ -16,11 +16,19 @@ const HOOK: Slide = {
 }
 
 const TEMPLATES: Array<{ theme: CarouselMeta['theme']; filename: string }> = [
-  { theme: 'default',        filename: 'default.png'        },
-  { theme: 'wolf-v2',        filename: 'wolf-v2.png'        },
-  { theme: 'editorial-step', filename: 'editorial-step.png' },
-  { theme: 'ascii-pixel',    filename: 'ascii-pixel.png'    },
-  { theme: 'editorial',      filename: 'editorial.png'      },
+  { theme: 'marrakech',  filename: 'marrakech.png'  },
+  { theme: 'reykjavik',  filename: 'reykjavik.png'  },
+  { theme: 'valletta',   filename: 'valletta.png'   },
+  { theme: 'tbilisi',    filename: 'tbilisi.png'    },
+  { theme: 'havana',     filename: 'havana.png'     },
+  { theme: 'medellin',   filename: 'medellin.png'   },
+  { theme: 'luanda',     filename: 'luanda.png'     },
+  { theme: 'tangier',    filename: 'tangier.png'    },
+  { theme: 'tallinn',    filename: 'tallinn.png'    },
+  { theme: 'cartagena',  filename: 'cartagena.png'  },
+  { theme: 'kyoto',      filename: 'kyoto.png'      },
+  { theme: 'copenhagen', filename: 'copenhagen.png' },
+  { theme: 'zurich',     filename: 'zurich.png'     },
 ]
 
 const META_BASE: Omit<CarouselMeta, 'theme'> = {

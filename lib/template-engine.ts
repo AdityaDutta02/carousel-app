@@ -3,6 +3,14 @@ import { buildEditorialHTML } from './editorial-template';
 import { buildWolfMediaV2HTML } from './wolf-media-v2-template';
 import { buildEditorialStepHTML } from './editorial-step-template';
 import { buildAsciiPixelHTML } from './ascii-pixel-template';
+import { buildFigrAHTML } from './figr-a-template';
+import { buildLuandaHTML } from './luanda-template';
+import { buildFigrCHTML } from './figr-c-template';
+import { buildFigrEHTML } from './figr-e-template';
+import { buildCartagenaHTML } from './cartagena-template';
+import { buildFigrGHTML } from './figr-g-template';
+import { buildCopenhagenHTML } from './copenhagen-template';
+import { buildZurichHTML } from './zurich-template';
 
 const CSS = `
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -42,6 +50,11 @@ body {
 /* WHITE SLIDE */
 .wt { background: #FFFFFF; }
 
+/* LIGHT HOOK SLIDE — warm paper (Rule U1: first slide always light) */
+.lth { background: #F5F3EF; }
+.lth .prog-track { background: rgba(0,0,0,0.10); }
+.lth .prog-fill { background: rgba(0,0,0,0.52); }
+
 /* CTA SLIDE */
 .ct {
   background:
@@ -79,7 +92,7 @@ body {
   border: 1px solid rgba(255,255,255,0.30);
   border-radius: 100px;
   padding: 10px 20px;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 500;
   color: rgba(255,255,255,0.68);
   letter-spacing: 0.01em;
@@ -94,7 +107,7 @@ body {
   border: 1px solid rgba(255,255,255,0.30);
   border-radius: 100px;
   padding: 10px 20px;
-  font-size: 14px;
+  font-size: 20px;
   font-weight: 500;
   color: rgba(255,255,255,0.68);
   letter-spacing: 0.01em;
@@ -314,11 +327,13 @@ function hookSizeClass(s: Slide): { cls: string; padTop: number } {
 
 function buildHook(s: Slide, handle: string, index: number, total: number): string {
   const { cls, padTop } = hookSizeClass(s);
-  const pill = s.pill ? `<div class="sub-pill">${esc(s.pill)}</div>` : '';
-  return `<section class="slide dk${index === 0 ? ' active' : ''}" id="slide-${s.id}">
-  <div class="handle-tr">${esc(handle)}</div>
+  const pill = s.pill
+    ? `<div style="display:inline-flex;align-items:center;border:1.5px solid rgba(0,0,0,0.18);border-radius:100px;padding:14px 34px;font-size:28px;font-weight:500;color:rgba(0,0,0,0.60);margin-top:46px;letter-spacing:0.01em;">${esc(s.pill)}</div>`
+    : '';
+  return `<section class="slide lth${index === 0 ? ' active' : ''}" id="slide-${s.id}">
+  <div style="position:absolute;top:55px;right:90px;display:inline-flex;align-items:center;border:1px solid rgba(0,0,0,0.14);border-radius:100px;padding:10px 20px;font-size:14px;font-weight:500;color:rgba(0,0,0,0.42);letter-spacing:0.01em;z-index:3;">${esc(handle)}</div>
   <div class="pad" style="padding-top:${padTop}px;">
-    <div class="${cls}">${headlineLines(s, false)}</div>
+    <div class="${cls} blk">${headlineLines(s, true)}</div>
     ${pill}
   </div>
   ${progressBar(index, total)}
@@ -435,10 +450,18 @@ function buildCTA(s: Slide, handle: string, pageName: string, index: number, tot
 }
 
 export function buildCarouselHTML(slides: Slide[], meta: CarouselMeta): string {
-  if (meta.theme === 'editorial') return buildEditorialHTML(slides, meta);
-  if (meta.theme === 'wolf-v2') return buildWolfMediaV2HTML(slides, meta);
-  if (meta.theme === 'editorial-step') return buildEditorialStepHTML(slides, meta);
-  if (meta.theme === 'ascii-pixel') return buildAsciiPixelHTML(slides, meta);
+  if (meta.theme === 'havana') return buildEditorialHTML(slides, meta);
+  if (meta.theme === 'reykjavik') return buildWolfMediaV2HTML(slides, meta);
+  if (meta.theme === 'valletta') return buildEditorialStepHTML(slides, meta);
+  if (meta.theme === 'tbilisi') return buildAsciiPixelHTML(slides, meta);
+  if (meta.theme === 'medellin') return buildFigrAHTML(slides, meta);
+  if (meta.theme === 'luanda') return buildLuandaHTML(slides, meta);
+  if (meta.theme === 'tangier') return buildFigrCHTML(slides, meta);
+  if (meta.theme === 'tallinn') return buildFigrEHTML(slides, meta);
+  if (meta.theme === 'cartagena') return buildCartagenaHTML(slides, meta);
+  if (meta.theme === 'kyoto') return buildFigrGHTML(slides, meta);
+  if (meta.theme === 'copenhagen') return buildCopenhagenHTML(slides, meta);
+  if (meta.theme === 'zurich') return buildZurichHTML(slides, meta);
   const total = slides.length;
   const slidesHTML = slides.map((s, i) => {
     switch (s.type) {

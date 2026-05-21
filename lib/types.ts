@@ -35,5 +35,5 @@ export interface CarouselMeta {
   topic: string;
   handle: string;
   pageName: string;
-  theme?: 'default' | 'editorial' | 'wolf-v2' | 'editorial-step' | 'ascii-pixel';
+  theme?: 'marrakech' | 'reykjavik' | 'valletta' | 'tbilisi' | 'havana' | 'medellin' | 'luanda' | 'tangier' | 'tallinn' | 'cartagena' | 'kyoto' | 'copenhagen' | 'zurich';
 }

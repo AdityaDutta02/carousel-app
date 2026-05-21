@@ -144,17 +144,30 @@ export default function HistoryPage() {
                       fontWeight: 700,
                       letterSpacing: '0.10em',
                       textTransform: 'uppercase',
-                      color: entry.theme === 'editorial' ? '#F5C800'
-                           : entry.theme === 'wolf-v2' ? '#E02020'
-                           : entry.theme === 'editorial-step' ? '#A8936A'
-                           : entry.theme === 'ascii-pixel' ? '#F7892B'
+                      color: entry.theme === 'havana' ? '#F5C800'
+                           : entry.theme === 'reykjavik' ? '#E02020'
+                           : entry.theme === 'valletta' ? '#A8936A'
+                           : entry.theme === 'tbilisi' ? '#F7892B'
+                           : entry.theme === 'copenhagen' ? '#1A1AF0'
+                           : entry.theme === 'luanda' ? '#F5E614'
+                           : entry.theme === 'zurich' ? '#D04437'
+                           : entry.theme === 'cartagena' ? '#C1440E'
                            : 'var(--accent)',
                     }}>
-                      {entry.theme === 'default' ? 'Dark Charcoal'
-                        : entry.theme === 'wolf-v2' ? 'Bold Report'
-                        : entry.theme === 'editorial-step' ? 'Cream Tutorial'
-                        : entry.theme === 'ascii-pixel' ? 'ASCII Terminal'
-                        : 'Gold Noir'}
+                      {entry.theme === 'marrakech' ? 'Marrakech'
+                        : entry.theme === 'reykjavik' ? 'Reykjavik'
+                        : entry.theme === 'valletta' ? 'Valletta'
+                        : entry.theme === 'tbilisi' ? 'Tbilisi'
+                        : entry.theme === 'havana' ? 'Havana'
+                        : entry.theme === 'medellin' ? 'Medellín'
+                        : entry.theme === 'luanda' ? 'Luanda'
+                        : entry.theme === 'tangier' ? 'Tangier'
+                        : entry.theme === 'tallinn' ? 'Tallinn'
+                        : entry.theme === 'cartagena' ? 'Cartagena'
+                        : entry.theme === 'kyoto' ? 'Kyoto'
+                        : entry.theme === 'copenhagen' ? 'Copenhagen'
+                        : entry.theme === 'zurich' ? 'Zürich'
+                        : entry.theme}
                     </span>
                     <span style={{ fontSize: 11, color: 'var(--ink-faint)' }}>
                       {entry.slideCount} slides · {entry.handle}

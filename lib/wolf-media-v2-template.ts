@@ -12,8 +12,12 @@ body { width: 1080px; background: #0D0D0D; font-family: 'Outfit', sans-serif; }
 .slide { width: 1080px; height: 1350px; display: none; position: relative; overflow: hidden; }
 .slide.active { display: block; }
 
-/* DARK SLIDE — stark black with map texture */
-.dk2 { background: #0D0D0D; }
+/* DARK SLIDE — stark black with vignette gradient + map texture */
+.dk2 {
+  background:
+    radial-gradient(ellipse 130% 90% at 30% 20%, rgba(30,0,0,0.55) 0%, transparent 55%),
+    #0D0D0D;
+}
 .dk2::before {
   content: '';
   position: absolute;
@@ -62,7 +66,7 @@ body { width: 1080px; background: #0D0D0D; font-family: 'Outfit', sans-serif; }
   display: inline-flex; align-items: center;
   border: 1px solid rgba(255,255,255,0.22);
   border-radius: 4px; padding: 8px 18px;
-  font-size: 13px; font-weight: 700;
+  font-size: 18px; font-weight: 700;
   letter-spacing: 0.12em; text-transform: uppercase;
   color: rgba(255,255,255,0.50); z-index: 3;
 }
@@ -71,7 +75,7 @@ body { width: 1080px; background: #0D0D0D; font-family: 'Outfit', sans-serif; }
   display: inline-flex; align-items: center;
   border: 1px solid rgba(255,255,255,0.22);
   border-radius: 4px; padding: 8px 18px;
-  font-size: 13px; font-weight: 700;
+  font-size: 18px; font-weight: 700;
   letter-spacing: 0.12em; text-transform: uppercase;
   color: rgba(255,255,255,0.50); z-index: 3;
 }
@@ -197,13 +201,13 @@ function hookSizeClass(s: Slide): { cls: string; padTop: number } {
 function buildHook(s: Slide, handle: string, index: number, total: number): string {
   const { cls, padTop } = hookSizeClass(s);
   const pill = s.pill
-    ? `<div class="sub-pill2">${esc(s.pill.toUpperCase())}</div>`
+    ? `<div style="display:inline-flex;align-items:center;border:1.5px solid rgba(0,0,0,0.18);border-radius:4px;padding:14px 28px;font-size:26px;font-weight:700;color:rgba(0,0,0,0.58);margin-top:44px;letter-spacing:0.10em;text-transform:uppercase;">${esc(s.pill.toUpperCase())}</div>`
     : '';
-  return `<section class="slide dk2${index === 0 ? ' active' : ''}" id="slide-${s.id}">
-  <div class="red-bar"></div>
-  <div class="handle-tr2">${esc(handle)}</div>
+  return `<section class="slide lt2${index === 0 ? ' active' : ''}" id="slide-${s.id}">
+  <div style="position:absolute;top:0;left:0;right:0;height:4px;background:#E02020;z-index:4;"></div>
+  <div style="position:absolute;top:52px;right:90px;display:inline-flex;align-items:center;border:1px solid rgba(0,0,0,0.16);border-radius:4px;padding:8px 18px;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(0,0,0,0.40);z-index:3;">${esc(handle)}</div>
   <div class="pad2" style="padding-top:${padTop}px;">
-    <div class="${cls}">${headlineLines(s, false)}</div>
+    <div class="${cls} h2-lk">${headlineLines(s, true)}</div>
     ${pill}
   </div>
   ${progressBar(index, total)}

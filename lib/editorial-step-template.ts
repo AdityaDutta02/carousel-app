@@ -10,8 +10,22 @@ body { width: 1080px; background: #0E0E0E; font-family: 'Outfit', sans-serif; }
 .slide { width: 1080px; height: 1350px; display: none; position: relative; overflow: hidden; }
 .slide.active { display: block; }
 
-/* DARK SLIDE — near black cover */
-.dke { background: #0E0E0E; }
+/* DARK SLIDE — near black with vignette + grain */
+.dke {
+  background:
+    radial-gradient(ellipse 130% 90% at 30% 20%, rgba(20,16,8,0.65) 0%, transparent 55%),
+    #0E0E0E;
+}
+.dke::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.50' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 300px 300px;
+  opacity: 0.20;
+  pointer-events: none;
+  z-index: 1;
+}
 
 /* CREAM SLIDE — warm paper */
 .cre { background: #F5F2ED; }
@@ -33,7 +47,7 @@ body { width: 1080px; background: #0E0E0E; font-family: 'Outfit', sans-serif; }
   display: inline-flex; align-items: center;
   border: 1px solid rgba(255,255,255,0.18);
   border-radius: 100px; padding: 10px 22px;
-  font-size: 13px; font-weight: 500;
+  font-size: 18px; font-weight: 500;
   color: rgba(255,255,255,0.48); z-index: 3;
 }
 .handle-tre {
@@ -41,7 +55,7 @@ body { width: 1080px; background: #0E0E0E; font-family: 'Outfit', sans-serif; }
   display: inline-flex; align-items: center;
   border: 1px solid rgba(255,255,255,0.18);
   border-radius: 100px; padding: 10px 22px;
-  font-size: 13px; font-weight: 500;
+  font-size: 18px; font-weight: 500;
   color: rgba(255,255,255,0.48); z-index: 3;
 }
 .handle-tle-lk {
@@ -49,7 +63,7 @@ body { width: 1080px; background: #0E0E0E; font-family: 'Outfit', sans-serif; }
   display: inline-flex; align-items: center;
   border: 1px solid rgba(0,0,0,0.12);
   border-radius: 100px; padding: 10px 22px;
-  font-size: 13px; font-weight: 500;
+  font-size: 18px; font-weight: 500;
   color: rgba(0,0,0,0.36); z-index: 3;
 }
 
@@ -128,12 +142,12 @@ body { width: 1080px; background: #0E0E0E; font-family: 'Outfit', sans-serif; }
 
 /* STEP LABEL */
 .step-lbl {
-  font-size: 11px; font-weight: 700; letter-spacing: 0.16em;
+  font-size: 18px; font-weight: 700; letter-spacing: 0.16em;
   text-transform: uppercase; color: rgba(255,255,255,0.30);
   margin-bottom: 24px;
 }
 .step-lbl-lk {
-  font-size: 11px; font-weight: 700; letter-spacing: 0.16em;
+  font-size: 18px; font-weight: 700; letter-spacing: 0.16em;
   text-transform: uppercase; color: rgba(0,0,0,0.25);
   margin-bottom: 24px;
 }
@@ -146,7 +160,7 @@ body { width: 1080px; background: #0E0E0E; font-family: 'Outfit', sans-serif; }
 .step-item:last-child { border-bottom: 1px solid rgba(255,255,255,0.07); }
 .step-num {
   font-family: 'Playfair Display', serif;
-  font-size: 13px; font-weight: 700; font-style: italic;
+  font-size: 18px; font-weight: 700; font-style: italic;
   color: rgba(255,255,255,0.22); min-width: 32px; padding-top: 5px;
   letter-spacing: 0.06em;
 }
@@ -237,13 +251,14 @@ function hookSizeClass(s: Slide): { cls: string; padTop: number } {
 
 function buildHook(s: Slide, handle: string, index: number, total: number): string {
   const { cls, padTop } = hookSizeClass(s);
+  const hcls = cls === 'he-xl' ? 'he-xl-lk' : `${cls} he-lk`;
   const pill = s.pill
-    ? `<div class="sub-pile">${esc(s.pill)}</div>`
+    ? `<div style="display:inline-flex;align-items:center;border:1px solid rgba(0,0,0,0.14);border-radius:100px;padding:13px 32px;font-size:26px;font-weight:400;font-style:italic;color:rgba(0,0,0,0.50);margin-top:48px;font-family:'Playfair Display',serif;">${esc(s.pill)}</div>`
     : '';
-  return `<section class="slide dke${index === 0 ? ' active' : ''}" id="slide-${s.id}">
-  <div class="handle-tre">${esc(handle)}</div>
+  return `<section class="slide cre${index === 0 ? ' active' : ''}" id="slide-${s.id}">
+  <div class="handle-tle-lk">${esc(handle)}</div>
   <div class="pade" style="padding-top:${padTop}px;">
-    <div class="${cls}">${headlineLines(s, false)}</div>
+    <div class="${hcls}">${headlineLines(s, true)}</div>
     ${pill}
   </div>
   ${progressBar(index, total)}

@@ -10,7 +10,21 @@ body { width: 1080px; background: #1A1A1A; font-family: 'Inter', sans-serif; }
 .slide { width: 1080px; height: 1350px; display: none; position: relative; overflow: hidden; }
 .slide.active { display: block; }
 
-.dk  { background: #1A1A1A; }
+.dk {
+  background:
+    radial-gradient(ellipse 120% 80% at 35% 15%, rgba(50,38,12,0.60) 0%, transparent 55%),
+    #1A1A1A;
+}
+.dk::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n' color-interpolation-filters='sRGB'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.50' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 300px 300px;
+  opacity: 0.22;
+  pointer-events: none;
+  z-index: 1;
+}
 .wt  { background: #FFFFFF; }
 .yw  { background: #F5C800; }
 
@@ -23,7 +37,7 @@ body { width: 1080px; background: #1A1A1A; font-family: 'Inter', sans-serif; }
   display: flex; align-items: center; justify-content: center; z-index: 4;
 }
 .right-strip span {
-  font-family: 'Inter', sans-serif; font-weight: 500; font-size: 11px;
+  font-family: 'Inter', sans-serif; font-weight: 500; font-size: 18px;
   letter-spacing: 0.22em; color: #444444; text-transform: uppercase;
   transform: rotate(90deg); white-space: nowrap;
 }
@@ -77,7 +91,7 @@ body { width: 1080px; background: #1A1A1A; font-family: 'Inter', sans-serif; }
 /* list items */
 .li { display: flex; flex-direction: row; align-items: flex-start; gap: 36px; padding: 34px 0; border-top: 1px solid #2E2E2E; }
 .li:last-child { border-bottom: 1px solid #2E2E2E; }
-.li-n { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 12px; color: rgba(255,255,255,0.20); letter-spacing: 0.12em; min-width: 28px; padding-top: 8px; }
+.li-n { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 18px; color: rgba(255,255,255,0.20); letter-spacing: 0.12em; min-width: 28px; padding-top: 8px; }
 .li-title { font-family: 'DM Serif Display', serif; font-size: 40px; color: #FFFFFF; line-height: 1.25; margin-bottom: 10px; }
 .li-desc { font-family: 'Inter', sans-serif; font-weight: 300; font-size: 28px; color: rgba(255,255,255,0.44); line-height: 1.55; }
 
@@ -156,13 +170,15 @@ function num(n: number): string {
 // ─── Slide builders ─────────────────────────────────────────────────────────
 
 function buildHook(s: Slide, pageName: string, handle: string, index: number, total: number): string {
-  const pill = s.pill ? `<div class="pill">${esc(s.pill)}</div>` : '';
-  return `<section class="slide dk${index === 0 ? ' active' : ''}" id="slide-${s.id}">
+  const pill = s.pill
+    ? `<div class="pill" style="color:rgba(0,0,0,0.58);background:rgba(0,0,0,0.04);border-color:rgba(0,0,0,0.14);">${esc(s.pill)}</div>`
+    : '';
+  return `<section class="slide wt${index === 0 ? ' active' : ''}" id="slide-${s.id}">
   <div class="top-bar"></div>
   <div class="right-strip"><span>${index + 1} / ${total} — ${esc(pageName)}</span></div>
   <div style="position:absolute;inset:0;right:40px;padding:80px 80px 200px 80px;display:flex;flex-direction:column;justify-content:flex-end;z-index:2;">
-    <p style="font-family:'Inter',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.18em;color:#F5C800;text-transform:uppercase;margin-bottom:28px;">${esc(pageName)}</p>
-    <div style="font-family:'DM Serif Display',serif;font-weight:400;${hs(s)}">${hl(s)}</div>
+    <p style="font-family:'Inter',sans-serif;font-weight:700;font-size:13px;letter-spacing:0.18em;color:#0D0D0D;text-transform:uppercase;margin-bottom:28px;">${esc(pageName)}</p>
+    <div style="font-family:'DM Serif Display',serif;font-weight:400;${hs(s, true)}">${hl(s)}</div>
     ${pill}
   </div>
   <div class="bot-yw">
@@ -172,7 +188,7 @@ function buildHook(s: Slide, pageName: string, handle: string, index: number, to
     </div>
     <span style="font-family:'Bebas Neue',sans-serif;font-size:140px;line-height:1;color:#0D0D0D;opacity:0.12;">${num(index + 1)}</span>
   </div>
-  ${prog(index, total, false, 160)}
+  ${prog(index, total, true, 160)}
 </section>`;
 }
 
