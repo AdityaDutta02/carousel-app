@@ -6,11 +6,16 @@ import { buildSystemPrompt, buildUserPrompt } from '@/lib/content-prompt'
 export const maxDuration = 60
 
 export async function POST(req: NextRequest) {
-  const { topic, handle, pageName, embedToken } = await req.json() as {
+  const { topic, handle, pageName, embedToken, theme, angle, sourceUrl, audience, tone } = await req.json() as {
     topic: string
     handle: string
     pageName: string
     embedToken: string
+    theme?: string
+    angle?: string
+    sourceUrl?: string
+    audience?: string
+    tone?: string
   }
 
   if (!embedToken) {
@@ -28,15 +33,36 @@ export async function POST(req: NextRequest) {
   if (handle.trim().length > 50) {
     return NextResponse.json({ error: 'handle must be 50 characters or fewer' }, { status: 400 })
   }
+  if (angle && angle.trim().length > 500) {
+    return NextResponse.json({ error: 'angle must be 500 characters or fewer' }, { status: 400 })
+  }
+  if (sourceUrl && sourceUrl.trim().length > 1000) {
+    return NextResponse.json({ error: 'sourceUrl must be 1000 characters or fewer' }, { status: 400 })
+  }
 
   const normalizedHandle = handle.trim().startsWith('@') ? handle.trim() : `@${handle.trim()}`
 
+  // Build audience/tone context for user prompt
+  const audienceCtx = audience ? `\nAudience: ${audience}` : ''
+  const toneCtx = tone ? `\nTone: ${tone}` : ''
+  const extraCtx = audienceCtx + toneCtx
+
   try {
-    const research = await researchTopic(topic.trim(), embedToken)
-    const system = buildSystemPrompt()
-    const user = buildUserPrompt(topic.trim(), research)
+    const research = await researchTopic(topic.trim(), embedToken, sourceUrl?.trim())
+    const system = buildSystemPrompt(theme)
+    const user = buildUserPrompt(topic.trim(), research + extraCtx, angle?.trim())
     const slides = await generateSlides(system, user, embedToken)
-    return NextResponse.json({ slides, meta: { topic: topic.trim(), handle: normalizedHandle, pageName: pageName.trim() } })
+    return NextResponse.json({
+      slides,
+      meta: {
+        topic: topic.trim(),
+        handle: normalizedHandle,
+        pageName: pageName.trim(),
+        theme,
+        angle: angle?.trim() || undefined,
+        sourceUrl: sourceUrl?.trim() || undefined,
+      },
+    })
   } catch (err) {
     const e = err as Error & { code?: string; redirect?: string }
     if (e.code === 'INSUFFICIENT_CREDITS') {

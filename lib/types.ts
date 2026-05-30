@@ -36,4 +36,6 @@ export interface CarouselMeta {
   handle: string;
   pageName: string;
   theme?: 'marrakech' | 'reykjavik' | 'valletta' | 'tbilisi' | 'havana' | 'medellin' | 'luanda' | 'tangier' | 'tallinn' | 'cartagena' | 'kyoto' | 'copenhagen' | 'zurich';
+  angle?: string;
+  sourceUrl?: string;
 }

@@ -3,8 +3,7 @@
 import { useState, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { Slide, CarouselMeta } from '@/lib/types';
-import { useEmbedToken } from '@/hooks/use-embed-token';
+import type { CarouselMeta } from '@/lib/types';
 
 type Theme = NonNullable<CarouselMeta['theme']>;
 
@@ -28,40 +27,31 @@ const TEMPLATES: Array<{ value: Theme; label: string; sub: string; thumb: string
 
 export default function HomePage() {
   const router = useRouter();
-  const embedToken = useEmbedToken();
   const [topic, setTopic] = useState('');
   const [handle, setHandle] = useState('@');
   const [pageName, setPageName] = useState('');
+  const [angle, setAngle] = useState('');
+  const [sourceUrl, setSourceUrl] = useState('');
   const [theme, setTheme] = useState<Theme>('marrakech');
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  async function handleSubmit(e: FormEvent) {
+  function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError('');
-    setLoading(true);
-    try {
-      const res = await fetch('/api/research', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic, handle, pageName, embedToken }),
-      });
-      let data: { slides?: Slide[]; meta?: CarouselMeta; error?: string };
-      try {
-        data = await res.json();
-      } catch {
-        throw new Error(`Server error ${res.status} — check your API keys and try again`);
-      }
-      if (!res.ok) throw new Error(data.error ?? `Error ${res.status}`);
-      if (!data.slides || !data.meta) throw new Error('Unexpected response from server');
-      localStorage.setItem('carousel_slides', JSON.stringify(data.slides));
-      localStorage.setItem('carousel_meta', JSON.stringify({ ...data.meta, theme }));
-      router.push('/review');
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong');
-    } finally {
-      setLoading(false);
+    if (!topic.trim() || !handle.trim() || !pageName.trim()) {
+      setError('Topic, page name, and handle are required.');
+      return;
     }
+    // Store params for the clarify page
+    localStorage.setItem('carousel_draft', JSON.stringify({
+      topic: topic.trim(),
+      handle: handle.trim().startsWith('@') ? handle.trim() : `@${handle.trim()}`,
+      pageName: pageName.trim(),
+      theme,
+      angle: angle.trim() || undefined,
+      sourceUrl: sourceUrl.trim() || undefined,
+    }));
+    router.push('/clarify');
   }
 
   return (
@@ -110,7 +100,6 @@ export default function HomePage() {
         >
           {/* ── LEFT COL: inputs ── */}
           <div style={{ width: 420, flexShrink: 0 }}>
-            {/* Header */}
             <motion.div
               style={{ marginBottom: 44 }}
               initial={{ opacity: 0 }}
@@ -142,7 +131,6 @@ export default function HomePage() {
               </p>
             </motion.div>
 
-            {/* Form */}
             <motion.form
               onSubmit={handleSubmit}
               style={{ display: 'flex', flexDirection: 'column', gap: 22 }}
@@ -183,6 +171,46 @@ export default function HomePage() {
                 />
               </Field>
 
+              {/* Optional fields */}
+              <div style={{
+                borderTop: '1px solid var(--border)',
+                paddingTop: 18,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 18,
+              }}>
+                <div style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  letterSpacing: '0.10em',
+                  textTransform: 'uppercase',
+                  color: 'var(--ink-faint)',
+                  marginBottom: -4,
+                }}>
+                  Optional
+                </div>
+
+                <Field label="Angle" hint="Lock the specific thesis">
+                  <input
+                    type="text"
+                    value={angle}
+                    onChange={e => setAngle(e.target.value)}
+                    placeholder="e.g. VC money is making founders worse"
+                    className="field-input"
+                  />
+                </Field>
+
+                <Field label="Source URL" hint="Primary article or report">
+                  <input
+                    type="url"
+                    value={sourceUrl}
+                    onChange={e => setSourceUrl(e.target.value)}
+                    placeholder="https://..."
+                    className="field-input"
+                  />
+                </Field>
+              </div>
+
               <AnimatePresence>
                 {error && (
                   <motion.div
@@ -207,33 +235,27 @@ export default function HomePage() {
 
               <motion.button
                 type="submit"
-                disabled={loading}
                 style={{
                   marginTop: 4,
                   padding: '15px 24px',
-                  background: loading ? 'rgba(255,255,255,0.05)' : 'var(--accent)',
-                  color: loading ? 'var(--ink-muted)' : '#fff',
+                  background: 'var(--accent)',
+                  color: '#fff',
                   border: 'none',
                   borderRadius: 'var(--radius)',
                   fontSize: 15,
                   fontWeight: 700,
                   letterSpacing: '0.01em',
-                  cursor: loading ? 'not-allowed' : 'pointer',
+                  cursor: 'pointer',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: 6,
                 }}
-                whileHover={!loading ? { scale: 1.02, y: -1 } : {}}
-                whileTap={!loading ? { scale: 0.98 } : {}}
+                whileHover={{ scale: 1.02, y: -1 }}
+                whileTap={{ scale: 0.98 }}
                 transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               >
-                {loading ? (
-                  <>
-                    Researching &amp; writing
-                    <LoadingDots />
-                  </>
-                ) : 'Generate slides →'}
+                Continue →
               </motion.button>
             </motion.form>
           </div>
@@ -291,9 +313,7 @@ function ThemeBtn({ active, onClick, label, sub, thumb }: { active: boolean; onC
         overflow: 'hidden',
         background: 'transparent',
       }}
-      animate={{
-        borderColor: active ? 'var(--accent)' : 'var(--border)',
-      }}
+      animate={{ borderColor: active ? 'var(--accent)' : 'var(--border)' }}
       whileHover={{ scale: !active ? 1.02 : 1 }}
       whileTap={{ scale: 0.97 }}
       transition={{ type: 'spring', stiffness: 400, damping: 32 }}
@@ -338,26 +358,5 @@ function Field({ label, hint, children }: { label: string; hint: string; childre
       </div>
       {children}
     </div>
-  );
-}
-
-function LoadingDots() {
-  return (
-    <span style={{ display: 'inline-flex', gap: 3, alignItems: 'center' }}>
-      {[0, 1, 2].map(i => (
-        <motion.span
-          key={i}
-          style={{
-            width: 3,
-            height: 3,
-            borderRadius: '50%',
-            background: 'currentColor',
-            display: 'inline-block',
-          }}
-          animate={{ opacity: [0.25, 1, 0.25] }}
-          transition={{ duration: 1.2, repeat: Infinity, delay: i * 0.22, ease: 'easeInOut' }}
-        />
-      ))}
-    </span>
   );
 }

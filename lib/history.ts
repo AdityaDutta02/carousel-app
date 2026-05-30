@@ -1,5 +1,5 @@
 import { dbList, dbInsert, dbDelete } from './db'
-import type { Slide } from './types'
+import type { Slide, CarouselMeta } from './types'
 
 export interface HistoryEntry {
   id: string
@@ -7,7 +7,7 @@ export interface HistoryEntry {
   topic: string
   handle: string
   pageName: string
-  theme: 'default' | 'editorial' | 'wolf-v2' | 'editorial-step' | 'ascii-pixel'
+  theme: NonNullable<CarouselMeta['theme']>
   slides: Slide[]
   exportId: string
   slideCount: number

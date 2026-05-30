@@ -8,11 +8,21 @@ import { useEmbedToken } from '@/hooks/use-embed-token';
 
 const ease: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
 
+const TYPE_LABEL: Record<Slide['type'], string> = {
+  hook: 'Hook', data: 'Data', insight: 'Insight',
+  list: 'List', grid: 'Grid', findings: 'Findings', cta: 'CTA',
+};
+const TYPE_COLOR: Record<Slide['type'], string> = {
+  hook: '#E8894A', data: '#5B9CF6', insight: '#6BC28E',
+  list: '#E8894A', grid: '#6BC28E', findings: '#6BC28E', cta: '#5B9CF6',
+};
+
 export default function ReviewPage() {
   const router = useRouter();
   const embedToken = useEmbedToken();
   const [slides, setSlides] = useState<Slide[]>([]);
   const [meta, setMeta] = useState<CarouselMeta | null>(null);
+  const [expandedId, setExpandedId] = useState<number | null>(null);
   const [exporting, setExporting] = useState(false);
   const [regenerating, setRegenerating] = useState(false);
   const [error, setError] = useState('');
@@ -33,11 +43,20 @@ export default function ReviewPage() {
     if (!meta) return;
     setError('');
     setRegenerating(true);
+    setExpandedId(null);
     try {
       const res = await fetch('/api/research', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic: meta.topic, pageName: meta.pageName, handle: meta.handle, embedToken }),
+        body: JSON.stringify({
+          topic: meta.topic,
+          pageName: meta.pageName,
+          handle: meta.handle,
+          theme: meta.theme,
+          angle: meta.angle,
+          sourceUrl: meta.sourceUrl,
+          embedToken,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? `Error ${res.status}`);
@@ -81,104 +100,304 @@ export default function ReviewPage() {
   const busy = exporting || regenerating;
 
   return (
-    <motion.main
-      style={{ padding: '40px 24px', maxWidth: 900, margin: '0 auto' }}
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, ease }}
-    >
-      {/* Header */}
-      <div style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        justifyContent: 'space-between',
-        marginBottom: 36,
-        flexWrap: 'wrap',
-        gap: 16,
-      }}>
-        <div>
-          <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 5 }}>
-            Review slides
-          </h1>
-          <p style={{ color: 'var(--ink-muted)', fontSize: 13 }}>
-            {meta.topic} · {slides.length} slides · {meta.handle}
-          </p>
+    <>
+      <style>{`
+        @media (max-width: 820px) { .slide-grid { grid-template-columns: repeat(2, 1fr) !important; } }
+        @media (max-width: 520px) { .slide-grid { grid-template-columns: 1fr !important; } }
+      `}</style>
+      <motion.main
+        style={{ padding: '40px 24px', maxWidth: 1200, margin: '0 auto' }}
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease }}
+      >
+        {/* Header */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          marginBottom: 32,
+          flexWrap: 'wrap',
+          gap: 16,
+        }}>
+          <div>
+            <h1 style={{ fontSize: 24, fontWeight: 800, letterSpacing: '-0.03em', marginBottom: 5 }}>
+              Review slides
+            </h1>
+            <p style={{ color: 'var(--ink-muted)', fontSize: 13 }}>
+              {meta.topic} · {slides.length} slides · {meta.handle}
+              {meta.theme && <span style={{ marginLeft: 8, color: 'var(--ink-faint)' }}>· {meta.theme}</span>}
+            </p>
+          </div>
+          <ActionButtons
+            busy={busy}
+            exporting={exporting}
+            regenerating={regenerating}
+            onBack={() => router.push('/clarify')}
+            onRegenerate={handleRegenerate}
+            onExport={handleExport}
+          />
         </div>
-        <ActionButtons
-          busy={busy}
-          exporting={exporting}
-          regenerating={regenerating}
-          onBack={() => router.push('/')}
-          onRegenerate={handleRegenerate}
-          onExport={handleExport}
-        />
-      </div>
 
-      <AnimatePresence>
-        {error && (
-          <motion.div
-            initial={{ opacity: 0, y: -6, height: 0 }}
-            animate={{ opacity: 1, y: 0, height: 'auto' }}
-            exit={{ opacity: 0, y: -6, height: 0 }}
-            transition={{ duration: 0.22 }}
-            style={{
-              background: 'rgba(220,60,60,0.10)',
-              border: '1px solid rgba(220,60,60,0.22)',
-              borderRadius: 8,
-              padding: '12px 16px',
-              color: '#ff7a7a',
-              fontSize: 14,
-              marginBottom: 24,
-              overflow: 'hidden',
-            }}
-          >
-            {error}
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Slide list */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-        {slides.map((slide, i) => (
-          <motion.div
-            key={slide.id}
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.32, delay: Math.min(i * 0.05, 0.35), ease }}
-          >
+        <AnimatePresence>
+          {error && (
             <motion.div
-              whileHover={{ y: -2, borderColor: 'rgba(255,255,255,0.13)' }}
-              transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+              initial={{ opacity: 0, y: -6, height: 0 }}
+              animate={{ opacity: 1, y: 0, height: 'auto' }}
+              exit={{ opacity: 0, y: -6, height: 0 }}
+              transition={{ duration: 0.22 }}
               style={{
-                background: 'var(--surface)',
-                border: '1px solid var(--border)',
-                borderRadius: 'var(--radius-lg)',
-                padding: '20px 24px',
+                background: 'rgba(220,60,60,0.10)',
+                border: '1px solid rgba(220,60,60,0.22)',
+                borderRadius: 8,
+                padding: '12px 16px',
+                color: '#ff7a7a',
+                fontSize: 14,
+                marginBottom: 24,
+                overflow: 'hidden',
               }}
             >
-              <SlideCard
-                slide={slide}
-                index={i}
-                total={slides.length}
-                onChange={updates => updateSlide(slide.id, updates)}
-              />
+              {error}
             </motion.div>
-          </motion.div>
-        ))}
-      </div>
+          )}
+        </AnimatePresence>
 
-      {/* Footer actions */}
-      <div style={{ marginTop: 36, display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
-        <ActionButtons
-          busy={busy}
-          exporting={exporting}
-          regenerating={regenerating}
-          onBack={() => router.push('/')}
-          onRegenerate={handleRegenerate}
-          onExport={handleExport}
-        />
-      </div>
-    </motion.main>
+        {/* 3-column grid */}
+        <div
+          className="slide-grid"
+          style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12 }}
+        >
+          {slides.map((slide, i) => {
+            const isExpanded = expandedId === slide.id;
+            return (
+              <motion.div
+                key={slide.id}
+                initial={{ opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.28, delay: Math.min(i * 0.04, 0.28), ease }}
+                style={isExpanded ? { gridColumn: '1 / -1' } : {}}
+              >
+                <motion.div
+                  onClick={() => !isExpanded && setExpandedId(slide.id)}
+                  animate={{
+                    borderColor: isExpanded ? 'var(--accent)' : 'var(--border)',
+                    background: isExpanded ? 'var(--surface)' : 'var(--surface)',
+                  }}
+                  whileHover={!isExpanded ? { y: -2, borderColor: 'rgba(255,255,255,0.13)' } : {}}
+                  transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  style={{
+                    background: 'var(--surface)',
+                    border: '1px solid var(--border)',
+                    borderRadius: 'var(--radius-lg)',
+                    overflow: 'hidden',
+                    cursor: isExpanded ? 'default' : 'pointer',
+                  }}
+                >
+                  {/* Card header — always visible */}
+                  <div style={{
+                    padding: '14px 16px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    borderBottom: isExpanded ? '1px solid var(--border)' : 'none',
+                  }}>
+                    <span style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 22,
+                      height: 22,
+                      background: 'rgba(255,255,255,0.06)',
+                      borderRadius: 6,
+                      fontSize: 10,
+                      fontWeight: 700,
+                      color: 'var(--ink-muted)',
+                      flexShrink: 0,
+                    }}>
+                      {i + 1}
+                    </span>
+                    <span style={{
+                      fontSize: 10,
+                      fontWeight: 700,
+                      letterSpacing: '0.10em',
+                      color: TYPE_COLOR[slide.type],
+                      textTransform: 'uppercase',
+                      flex: 1,
+                    }}>
+                      {TYPE_LABEL[slide.type]}
+                    </span>
+                    {isExpanded ? (
+                      <motion.button
+                        onClick={() => setExpandedId(null)}
+                        style={{
+                          padding: '3px 8px',
+                          background: 'transparent',
+                          color: 'var(--ink-faint)',
+                          border: '1px solid var(--border)',
+                          borderRadius: 5,
+                          fontSize: 11,
+                          cursor: 'pointer',
+                          flexShrink: 0,
+                        }}
+                        whileHover={{ color: 'var(--ink)' }}
+                        transition={{ duration: 0.15 }}
+                      >
+                        Done ✕
+                      </motion.button>
+                    ) : (
+                      <span style={{ fontSize: 10, color: 'var(--ink-faint)' }}>Edit</span>
+                    )}
+                  </div>
+
+                  {/* Compact preview — shown when collapsed */}
+                  {!isExpanded && (
+                    <div style={{ padding: '10px 16px 14px' }}>
+                      <div style={{
+                        fontSize: 13,
+                        fontWeight: 600,
+                        color: 'var(--ink)',
+                        lineHeight: 1.35,
+                        marginBottom: 5,
+                        overflow: 'hidden',
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                      }}>
+                        {slide.headline || <span style={{ color: 'var(--ink-faint)', fontStyle: 'italic' }}>No headline</span>}
+                      </div>
+                      {(slide.body || slide.supporting) && (
+                        <div style={{
+                          fontSize: 11,
+                          color: 'var(--ink-muted)',
+                          lineHeight: 1.5,
+                          overflow: 'hidden',
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                        }}>
+                          {slide.body || slide.supporting}
+                        </div>
+                      )}
+                      {slide.stats && slide.stats.length > 0 && (
+                        <div style={{ display: 'flex', gap: 6, marginTop: 6, flexWrap: 'wrap' }}>
+                          {slide.stats.slice(0, 3).map((st, si) => (
+                            <span key={si} style={{
+                              fontSize: 10,
+                              padding: '2px 6px',
+                              background: 'rgba(91,156,246,0.12)',
+                              color: '#5B9CF6',
+                              borderRadius: 4,
+                            }}>
+                              {st.value}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      {slide.tagline && (
+                        <div style={{ fontSize: 11, color: 'var(--ink-muted)', fontStyle: 'italic', marginTop: 4 }}>
+                          {slide.tagline}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Expanded edit panel */}
+                  <AnimatePresence>
+                    {isExpanded && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: 'auto' }}
+                        exit={{ opacity: 0, height: 0 }}
+                        transition={{ duration: 0.25, ease }}
+                        style={{ overflow: 'hidden' }}
+                      >
+                        <div style={{ padding: '20px 24px 24px' }}>
+                          <SlideEditFields
+                            slide={slide}
+                            onChange={updates => updateSlide(slide.id, updates)}
+                          />
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Footer actions */}
+        <div style={{ marginTop: 32, display: 'flex', justifyContent: 'flex-end', gap: 10 }}>
+          <ActionButtons
+            busy={busy}
+            exporting={exporting}
+            regenerating={regenerating}
+            onBack={() => router.push('/clarify')}
+            onRegenerate={handleRegenerate}
+            onExport={handleExport}
+          />
+        </div>
+      </motion.main>
+    </>
+  );
+}
+
+function SlideEditFields({ slide, onChange }: {
+  slide: Slide;
+  onChange: (updates: Partial<Slide>) => void;
+}) {
+  return (
+    <div>
+      {slide.type !== 'cta' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
+          <InlineField label="Headline 1" value={slide.headline} onChange={v => onChange({ headline: v })} hint="~ prefix = gradient" />
+          {slide.headline2 !== undefined && (
+            <InlineField label="Headline 2" value={slide.headline2} onChange={v => onChange({ headline2: v })} hint="~ prefix = gradient" />
+          )}
+          {slide.headline3 !== undefined && (
+            <InlineField label="Headline 3" value={slide.headline3} onChange={v => onChange({ headline3: v })} hint="~ prefix = gradient" />
+          )}
+        </div>
+      )}
+
+      {slide.type === 'hook' && (
+        <InlineField label="Pill subtitle" value={slide.pill ?? ''} onChange={v => onChange({ pill: v })} />
+      )}
+
+      {slide.type === 'data' && (
+        <div>
+          <StatEditor stats={slide.stats ?? []} onChange={stats => onChange({ stats })} />
+          <div style={{ marginTop: 12 }}>
+            <InlineField label="Footnote" value={slide.footnote ?? ''} onChange={v => onChange({ footnote: v })} multiline />
+          </div>
+        </div>
+      )}
+
+      {slide.type === 'insight' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <InlineField label="Body" value={slide.body ?? ''} onChange={v => onChange({ body: v })} multiline />
+          <InlineField label="Supporting" value={slide.supporting ?? ''} onChange={v => onChange({ supporting: v })} multiline />
+          {slide.tagline !== undefined && (
+            <InlineField label="Tagline" value={slide.tagline ?? ''} onChange={v => onChange({ tagline: v })} />
+          )}
+        </div>
+      )}
+
+      {slide.type === 'list' && (
+        <ListEditor steps={slide.steps ?? []} onChange={steps => onChange({ steps })} />
+      )}
+
+      {(slide.type === 'grid' || slide.type === 'findings') && (
+        <GridEditor items={slide.items ?? []} onChange={items => onChange({ items })} />
+      )}
+
+      {slide.type === 'cta' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          <InlineField label="Headline" value={slide.headline} onChange={v => onChange({ headline: v })} />
+          <InlineField label="Tagline" value={slide.tagline ?? ''} onChange={v => onChange({ tagline: v })} multiline />
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -192,7 +411,7 @@ function ActionButtons({ busy, exporting, regenerating, onBack, onRegenerate, on
 }) {
   return (
     <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-      <Btn ghost onClick={onBack}>← New topic</Btn>
+      <Btn ghost onClick={onBack}>← Edit inputs</Btn>
       <Btn ghost onClick={onRegenerate} disabled={busy}>
         {regenerating ? <>Regenerating <LoadingDots /></> : '↺ Regenerate'}
       </Btn>
@@ -248,101 +467,6 @@ function LoadingDots() {
         />
       ))}
     </span>
-  );
-}
-
-function SlideCard({ slide, index, total, onChange }: {
-  slide: Slide;
-  index: number;
-  total: number;
-  onChange: (updates: Partial<Slide>) => void;
-}) {
-  const typeLabel: Record<Slide['type'], string> = {
-    hook: 'Hook', data: 'Data', insight: 'Insight',
-    list: 'List', grid: 'Grid', findings: 'Findings', cta: 'CTA',
-  };
-  const typeColor: Record<Slide['type'], string> = {
-    hook: '#E8894A', data: '#5B9CF6', insight: '#6BC28E',
-    list: '#E8894A', grid: '#6BC28E', findings: '#6BC28E', cta: '#5B9CF6',
-  };
-
-  return (
-    <div>
-      {/* Card header */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20 }}>
-        <span style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: 22,
-          height: 22,
-          background: 'rgba(255,255,255,0.06)',
-          borderRadius: 6,
-          fontSize: 10,
-          fontWeight: 700,
-          color: 'var(--ink-muted)',
-          letterSpacing: '0.04em',
-          flexShrink: 0,
-        }}>
-          {index + 1}
-        </span>
-        <span style={{
-          fontSize: 10,
-          fontWeight: 700,
-          letterSpacing: '0.10em',
-          color: typeColor[slide.type],
-          textTransform: 'uppercase',
-        }}>
-          {typeLabel[slide.type]}
-        </span>
-        <span style={{ fontSize: 12, color: 'var(--ink-faint)' }}>of {total}</span>
-      </div>
-
-      {/* Headline fields */}
-      {slide.type !== 'cta' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 16 }}>
-          <InlineField label="Headline 1" value={slide.headline} onChange={v => onChange({ headline: v })} hint="~ prefix = gradient" />
-          {slide.headline2 !== undefined && (
-            <InlineField label="Headline 2" value={slide.headline2} onChange={v => onChange({ headline2: v })} hint="~ prefix = gradient" />
-          )}
-          {slide.headline3 !== undefined && (
-            <InlineField label="Headline 3" value={slide.headline3} onChange={v => onChange({ headline3: v })} hint="~ prefix = gradient" />
-          )}
-        </div>
-      )}
-
-      {slide.type === 'hook' && (
-        <InlineField label="Pill subtitle" value={slide.pill ?? ''} onChange={v => onChange({ pill: v })} />
-      )}
-
-      {slide.type === 'data' && (
-        <div>
-          <StatEditor stats={slide.stats ?? []} onChange={stats => onChange({ stats })} />
-          <div style={{ marginTop: 12 }}>
-            <InlineField label="Footnote" value={slide.footnote ?? ''} onChange={v => onChange({ footnote: v })} multiline />
-          </div>
-        </div>
-      )}
-
-      {slide.type === 'insight' && (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <InlineField label="Body" value={slide.body ?? ''} onChange={v => onChange({ body: v })} multiline />
-          <InlineField label="Supporting" value={slide.supporting ?? ''} onChange={v => onChange({ supporting: v })} multiline />
-        </div>
-      )}
-
-      {slide.type === 'list' && (
-        <ListEditor steps={slide.steps ?? []} onChange={steps => onChange({ steps })} />
-      )}
-
-      {(slide.type === 'grid' || slide.type === 'findings') && (
-        <GridEditor items={slide.items ?? []} onChange={items => onChange({ items })} />
-      )}
-
-      {slide.type === 'cta' && (
-        <InlineField label="Tagline" value={slide.tagline ?? ''} onChange={v => onChange({ tagline: v })} multiline />
-      )}
-    </div>
   );
 }
 

@@ -16,9 +16,13 @@ async function search(query: string, embedToken: string): Promise<string> {
   return result.content
 }
 
-export async function researchTopic(topic: string, embedToken: string): Promise<string> {
+export async function researchTopic(topic: string, embedToken: string, sourceUrl?: string): Promise<string> {
   const interpolate = (t: string) => t.replace(/\{topic\}/g, topic)
   const keys = Object.keys(QUERY_TEMPLATES)
-  const results = await Promise.all(keys.map(k => search(interpolate(QUERY_TEMPLATES[k]), embedToken)))
-  return keys.map((k, i) => `=== ${k.toUpperCase()} ===\n${results[i]}`).join('\n\n')
+  const [webResults, primarySource] = await Promise.all([
+    Promise.all(keys.map(k => search(interpolate(QUERY_TEMPLATES[k]), embedToken))),
+    sourceUrl ? search(`Read and summarize all key data, statistics, and claims from this URL: ${sourceUrl}`, embedToken) : Promise.resolve(null),
+  ])
+  const web = keys.map((k, i) => `=== ${k.toUpperCase()} ===\n${webResults[i]}`).join('\n\n')
+  return primarySource ? `=== PRIMARY SOURCE (user-provided) ===\n${primarySource}\n\n${web}` : web
 }
