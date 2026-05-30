@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, KeyboardEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { Slide, CarouselMeta } from '@/lib/types';
+import type { CarouselMeta } from '@/lib/types';
 import { useEmbedToken } from '@/hooks/use-embed-token';
 
 const ease: [number, number, number, number] = [0.25, 0.46, 0.45, 0.94];
@@ -30,6 +30,7 @@ export default function ClarifyPage() {
   const [audience, setAudience] = useState<Audience | ''>('');
   const [tone, setTone] = useState<Tone | ''>('');
   const [loading, setLoading] = useState(false);
+  const [statusPhase, setStatusPhase] = useState('');
   const [error, setError] = useState('');
   const [focusedField, setFocusedField] = useState<number | null>(null);
 
@@ -50,6 +51,7 @@ export default function ClarifyPage() {
     if (!draft || !embedToken) return;
     setError('');
     setLoading(true);
+    setStatusPhase('Searching the web');
     try {
       const res = await fetch('/api/research', {
         method: 'POST',
@@ -66,27 +68,56 @@ export default function ClarifyPage() {
           tone: tone || undefined,
         }),
       });
-      let data: { slides?: Slide[]; meta?: CarouselMeta; error?: string; code?: string; redirect?: string };
-      try {
-        data = await res.json();
-      } catch {
-        throw new Error(`Server error ${res.status} — check your API keys and try again`);
+
+      if (!res.ok || !res.body) {
+        let msg = `Error ${res.status}`;
+        try { const d = await res.json(); msg = d.error ?? msg; } catch { /* noop */ }
+        throw new Error(msg);
       }
-      if (!res.ok) {
-        if (data.code === 'INSUFFICIENT_CREDITS' && data.redirect) {
-          window.location.href = data.redirect;
-          return;
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() ?? '';
+
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          const event = JSON.parse(line.slice(6)) as {
+            type: string;
+            message?: string;
+            code?: string;
+            redirect?: string;
+            slides?: CarouselMeta[];
+            meta?: CarouselMeta;
+          };
+
+          if (event.type === 'status' && event.message) {
+            setStatusPhase(event.message);
+          } else if (event.type === 'done') {
+            localStorage.setItem('carousel_slides', JSON.stringify(event.slides));
+            localStorage.setItem('carousel_meta', JSON.stringify({ ...event.meta, theme: draft.theme }));
+            router.push('/review');
+            return;
+          } else if (event.type === 'error') {
+            if (event.code === 'INSUFFICIENT_CREDITS' && event.redirect) {
+              window.location.href = event.redirect;
+              return;
+            }
+            throw new Error(event.message ?? 'Generation failed');
+          }
         }
-        throw new Error(data.error ?? `Error ${res.status}`);
       }
-      if (!data.slides || !data.meta) throw new Error('Unexpected response from server');
-      localStorage.setItem('carousel_slides', JSON.stringify(data.slides));
-      localStorage.setItem('carousel_meta', JSON.stringify({ ...data.meta, theme: draft.theme }));
-      router.push('/review');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
       setLoading(false);
+      setStatusPhase('');
     }
   }
 
@@ -370,9 +401,7 @@ export default function ClarifyPage() {
               transition={{ type: 'spring', stiffness: 400, damping: 30 }}
             >
               {loading ? (
-                <>
-                  <ResearchStatus />
-                </>
+                <ResearchStatus phase={statusPhase} />
               ) : 'Generate slides →'}
             </motion.button>
 
@@ -458,22 +487,7 @@ function QuestionBlock({
   );
 }
 
-function ResearchStatus() {
-  const phases = [
-    'Searching the web',
-    'Analyzing sources',
-    'Writing slides',
-    'Designing layout',
-  ];
-  const [phase, setPhase] = useState(0);
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setPhase(p => (p + 1) % phases.length);
-    }, 3200);
-    return () => clearInterval(id);
-  }, [phases.length]);
-
+function ResearchStatus({ phase }: { phase: string }) {
   return (
     <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
       <AnimatePresence mode="wait">
@@ -485,7 +499,7 @@ function ResearchStatus() {
           transition={{ duration: 0.22 }}
           style={{ fontSize: 14 }}
         >
-          {phases[phase]}
+          {phase || 'Starting'}
         </motion.span>
       </AnimatePresence>
       <LoadingDots />
