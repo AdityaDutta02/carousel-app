@@ -33,6 +33,9 @@ export default function ClarifyPage() {
   const [statusPhase, setStatusPhase] = useState('');
   const [error, setError] = useState('');
   const [focusedField, setFocusedField] = useState<number | null>(null);
+  // Track which fields were pre-filled from the homepage draft
+  const [prefilledAngle, setPrefilledAngle] = useState(false);
+  const [prefilledSource, setPrefilledSource] = useState(false);
 
   const angleRef = useRef<HTMLInputElement>(null);
 
@@ -41,9 +44,9 @@ export default function ClarifyPage() {
     if (!raw) { router.push('/'); return; }
     const parsed = JSON.parse(raw) as DraftParams;
     setDraft(parsed);
-    if (parsed.angle) setAngle(parsed.angle);
-    if (parsed.sourceUrl) setSourceUrl(parsed.sourceUrl);
-    // Auto-focus first field
+    if (parsed.angle) { setAngle(parsed.angle); setPrefilledAngle(true); }
+    if (parsed.sourceUrl) { setSourceUrl(parsed.sourceUrl); setPrefilledSource(true); }
+    // Auto-focus first visible field
     setTimeout(() => angleRef.current?.focus(), 120);
   }, [router]);
 
@@ -124,12 +127,17 @@ export default function ClarifyPage() {
   function handleKeyDown(e: KeyboardEvent, fieldIndex: number) {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
-      if (fieldIndex < 1) {
-        // Move to next text field
-        document.getElementById(`clarify-field-${fieldIndex + 1}`)?.focus();
-      } else if ((e.metaKey || e.ctrlKey) || fieldIndex >= 1) {
-        // Last text field or Cmd+Enter anywhere: generate
+      if (e.metaKey || e.ctrlKey) {
         handleGenerate();
+        return;
+      }
+      if (fieldIndex === 0) {
+        // Advance to source URL field only if it's visible
+        const next = document.getElementById('clarify-field-1');
+        if (next) next.focus();
+        else (e.target as HTMLElement).blur();
+      } else {
+        (e.target as HTMLElement).blur();
       }
     }
   }
@@ -255,53 +263,85 @@ export default function ClarifyPage() {
             </p>
           </motion.div>
 
+          {/* Pre-filled chips from homepage */}
+          {(prefilledAngle || prefilledSource) && (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.04, duration: 0.35 }}
+              style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 8 }}
+            >
+              <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--ink-faint)', marginBottom: 4 }}>
+                From homepage
+              </div>
+              {prefilledAngle && (
+                <PrefilledChip
+                  label="Angle"
+                  value={angle}
+                  onClear={() => { setAngle(''); setPrefilledAngle(false); }}
+                />
+              )}
+              {prefilledSource && (
+                <PrefilledChip
+                  label="Source"
+                  value={sourceUrl}
+                  onClear={() => { setSourceUrl(''); setPrefilledSource(false); }}
+                />
+              )}
+            </motion.div>
+          )}
+
           {/* Questions */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 52 }}>
-            {/* Q1 — Angle */}
-            <QuestionBlock
-              question={questions[0]}
-              index={0}
-              focused={focusedField === 0}
-              staggerDelay={0.08}
-            >
-              <input
-                id="clarify-field-0"
-                ref={angleRef}
-                type="text"
-                className="clarify-input"
-                value={angle}
-                onChange={e => setAngle(e.target.value)}
-                onFocus={() => setFocusedField(0)}
-                onBlur={() => setFocusedField(null)}
-                onKeyDown={e => handleKeyDown(e, 0)}
-                placeholder="e.g. VC money is making founders worse"
-              />
-              {angle && (
-                <div style={{ marginTop: 8, fontSize: 12, color: 'var(--accent)', opacity: 0.8 }}>
-                  Press Enter →
-                </div>
-              )}
-            </QuestionBlock>
+            {/* Q1 — Angle (hidden if pre-filled) */}
+            {!prefilledAngle && (
+              <QuestionBlock
+                question={questions[0]}
+                index={0}
+                focused={focusedField === 0}
+                staggerDelay={0.08}
+              >
+                <input
+                  id="clarify-field-0"
+                  ref={angleRef}
+                  type="text"
+                  className="clarify-input"
+                  value={angle}
+                  onChange={e => setAngle(e.target.value)}
+                  onFocus={() => setFocusedField(0)}
+                  onBlur={() => setFocusedField(null)}
+                  onKeyDown={e => handleKeyDown(e, 0)}
+                  placeholder="e.g. VC money is making founders worse"
+                />
+                {angle && (
+                  <div style={{ marginTop: 8, fontSize: 12, color: 'var(--accent)', opacity: 0.8 }}>
+                    Press Enter →
+                  </div>
+                )}
+              </QuestionBlock>
+            )}
 
-            {/* Q2 — Source URL */}
-            <QuestionBlock
-              question={questions[1]}
-              index={1}
-              focused={focusedField === 1}
-              staggerDelay={0.14}
-            >
-              <input
-                id="clarify-field-1"
-                type="url"
-                className="clarify-input"
-                value={sourceUrl}
-                onChange={e => setSourceUrl(e.target.value)}
-                onFocus={() => setFocusedField(1)}
-                onBlur={() => setFocusedField(null)}
-                onKeyDown={e => handleKeyDown(e, 1)}
-                placeholder="https://example.com/article"
-              />
-            </QuestionBlock>
+            {/* Q2 — Source URL (hidden if pre-filled) */}
+            {!prefilledSource && (
+              <QuestionBlock
+                question={questions[1]}
+                index={1}
+                focused={focusedField === 1}
+                staggerDelay={0.14}
+              >
+                <input
+                  id="clarify-field-1"
+                  type="url"
+                  className="clarify-input"
+                  value={sourceUrl}
+                  onChange={e => setSourceUrl(e.target.value)}
+                  onFocus={() => setFocusedField(1)}
+                  onBlur={() => setFocusedField(null)}
+                  onKeyDown={e => handleKeyDown(e, 1)}
+                  placeholder="https://example.com/article"
+                />
+              </QuestionBlock>
+            )}
 
             {/* Q3 — Audience */}
             <QuestionBlock
@@ -504,6 +544,45 @@ function ResearchStatus({ phase }: { phase: string }) {
       </AnimatePresence>
       <LoadingDots />
     </span>
+  );
+}
+
+function PrefilledChip({ label, value, onClear }: { label: string; value: string; onClear: () => void }) {
+  return (
+    <div style={{
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10,
+      padding: '8px 14px',
+      background: 'rgba(255,255,255,0.04)',
+      border: '1px solid var(--border)',
+      borderRadius: 8,
+      minWidth: 0,
+    }}>
+      <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--accent)', letterSpacing: '0.08em', textTransform: 'uppercase', flexShrink: 0 }}>
+        {label}
+      </span>
+      <span style={{
+        fontSize: 13,
+        color: 'var(--ink-muted)',
+        flex: 1,
+        minWidth: 0,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
+      }}>
+        {value}
+      </span>
+      <motion.button
+        onClick={onClear}
+        style={{ background: 'none', border: 'none', color: 'var(--ink-faint)', cursor: 'pointer', fontSize: 13, flexShrink: 0, padding: '0 2px', fontFamily: 'inherit' }}
+        whileHover={{ color: 'var(--ink)' }}
+        transition={{ duration: 0.15 }}
+        title="Edit"
+      >
+        Edit
+      </motion.button>
+    </div>
   );
 }
 
